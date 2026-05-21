@@ -189,7 +189,8 @@ export default function App() {
     meseroId: string,
     chefId: string,
     customerId?: string,
-    items: OrderDetail[] = []
+    items: OrderDetail[] = [],
+    reservationName?: string
   ) => {
     const nextOrderId = `ord_${Date.now()}`;
     const tableNumber = tables.find(t => t.id === tableId)?.number || 0;
@@ -218,7 +219,7 @@ export default function App() {
     setActiveOrders(prev => [...prev, newOrder]);
     
     setTables(prev => prev.map(t => 
-      t.id === tableId ? { ...t, status: 'Ocupada', currentOrderId: nextOrderId } : t
+      t.id === tableId ? { ...t, status: 'Ocupada', currentOrderId: nextOrderId, reservationName } : t
     ));
   };
 
@@ -315,7 +316,7 @@ export default function App() {
 
     // 2. Actualizar estatus de mesa e invocar limpieza
     setTables(prev => prev.map(t => 
-      t.id === order.tableId ? { ...t, status: 'Libre', currentOrderId: undefined } : t
+      t.id === order.tableId ? { ...t, status: 'Libre', currentOrderId: undefined, reservationName: undefined } : t
     ));
 
     // 3. Remover de comandas activas

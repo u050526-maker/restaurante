@@ -8,7 +8,7 @@ interface MesasComandasProps {
   staff: StaffMember[];
   customers: Customer[];
   activeOrders: Order[];
-  onOpenTable: (tableId: string, meseroId: string, chefId: string, customerId?: string, items?: OrderDetail[]) => void;
+  onOpenTable: (tableId: string, meseroId: string, chefId: string, customerId?: string, items?: OrderDetail[], reservationName?: string) => void;
   onUpdateOrder: (orderId: string, updates: Partial<Order>) => void;
   onUpdateTableStatus: (tableId: string, status: Table['status']) => void;
   setActiveTab: (tab: string) => void;
@@ -36,6 +36,7 @@ export default function MesasComandas({
   const [selectedWaiterId, setSelectedWaiterId] = useState('');
   const [selectedChefId, setSelectedChefId] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState('');
+  const [reservationName, setReservationName] = useState('');
   const [cartItems, setCartItems] = useState<OrderDetail[]>([]);
   const [menuSearch, setMenuSearch] = useState('');
   const [menuFilter, setMenuFilter] = useState<'Todos' | 'Comidas' | 'Bebidas' | 'Postres' | 'Entradas'>('Todos');
@@ -58,6 +59,7 @@ export default function MesasComandas({
       setSelectedWaiterId(defaultWaiterId);
       setSelectedChefId(chefs[0]?.id || '');
       setSelectedCustomerId('');
+      setReservationName('');
       setCartItems([]);
     }
   };
@@ -107,7 +109,8 @@ export default function MesasComandas({
       selectedWaiterId,
       selectedChefId,
       selectedCustomerId || undefined,
-      cartItems
+      cartItems,
+      reservationName.trim() || undefined
     );
     setIsOpeningModal(false);
     setSelectedTable(null);
@@ -177,6 +180,11 @@ export default function MesasComandas({
                       table.status === 'Buscando Cuenta' ? 'text-blue-400' : 'text-gray-600'
                     }`} />
                     <span className="text-base font-bold">Mesa {table.number}</span>
+                    {table.reservationName && (
+                      <span className="text-xs font-bold text-[#C5A059] bg-[#C5A059]/10 border border-[#C5A059]/20 px-2 py-0.5 rounded truncate max-w-full" title={table.reservationName}>
+                        👤 {table.reservationName}
+                      </span>
+                    )}
                     <span className="text-[11px] text-gray-500 font-medium">Capacidad: {table.capacity} paxs</span>
                     
                     <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded border ${statusBadge}`}>
@@ -202,7 +210,12 @@ export default function MesasComandas({
               <div className="flex items-center justify-between border-b border-[#2A2A2A] pb-3">
                 <div>
                   <h3 className="font-bold text-white text-base">Comanda Mesa {selectedTable.number}</h3>
-                  <p className="text-[11px] text-gray-500">Orden ID: #{currentActiveOrder.id.substring(4, 9).toUpperCase()}</p>
+                  {selectedTable.reservationName && (
+                    <p className="text-xs font-bold text-[#C5A059] flex items-center gap-1 mt-1 font-sans">
+                      👤 {selectedTable.reservationName}
+                    </p>
+                  )}
+                  <p className="text-[11px] text-gray-500 mt-1">Orden ID: #{currentActiveOrder.id.substring(4, 9).toUpperCase()}</p>
                 </div>
                 <button 
                   onClick={() => setSelectedTable(null)}
@@ -491,6 +504,18 @@ export default function MesasComandas({
                       <option key={c.id} value={c.id} className="bg-[#141414] text-white">{c.name} ({c.points} pts)</option>
                     ))}
                   </select>
+                </div>
+
+                {/* Nombre de la Reserva / Mesa */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-gray-400 block">Nombre de la Reserva / Cliente (Opcional)</label>
+                  <input
+                    type="text"
+                    value={reservationName}
+                    onChange={(e) => setReservationName(e.target.value)}
+                    placeholder="Ej. Familia Pérez, Cumpleaños de Sofía"
+                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-650"
+                  />
                 </div>
 
                 {/* Resumen de Comanda a Abrir */}
