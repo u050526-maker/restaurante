@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, User, ShieldCheck, Coffee, Key, AlertCircle, LogIn, Sparkles } from 'lucide-react';
+import { Lock, User, ShieldCheck, Coffee, Key, AlertCircle, LogIn } from 'lucide-react';
 import { StaffMember } from '../types';
 
 interface LoginProps {
@@ -38,19 +38,6 @@ export default function Login({ staff, onLogin }: LoginProps) {
       setError('Credenciales incorrectas. Verifica el usuario o contraseña.');
     }
   };
-
-  const handleQuickLogin = (demoUser: StaffMember) => {
-    if (demoUser.username && demoUser.password) {
-      setUsername(demoUser.username);
-      setPassword(demoUser.password);
-      setError(null);
-      onLogin(demoUser);
-    }
-  };
-
-  // Find demo users for quick access
-  const adminDemo = staff.find(s => s.role === 'Administrador' && s.username);
-  const waiterDemo = staff.find(s => s.role === 'Mesero' && s.username);
 
   return (
     <div className="min-h-screen bg-[#070707] flex items-center justify-center p-4 font-sans select-none relative overflow-hidden" id="login-container">
@@ -134,56 +121,10 @@ export default function Login({ staff, onLogin }: LoginProps) {
             </button>
           </form>
 
-          {/* Quick Demo Logins block */}
-          <div className="mt-6 pt-5 border-t border-[#1F1F1F] space-y-3 text-left">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-              <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>Acceso Rápido de Demostración</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {/* Admin Button */}
-              {adminDemo ? (
-                <button
-                  onClick={() => handleQuickLogin(adminDemo)}
-                  className="bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#222222] hover:border-[#C5A059]/40 p-2.5 rounded-xl text-left transition-all cursor-pointer group"
-                >
-                  <span className="text-[10px] font-bold text-gray-400 block group-hover:text-white">Admin Carlos/Jorge</span>
-                  <span className="text-[9px] text-[#C5A059] font-mono block mt-0.5">user: admin</span>
-                  <span className="text-[9px] text-gray-450 font-mono block">pass: admin123</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => onLogin({ id: 's7', name: 'Administrador Demo', role: 'Administrador', phone: '', email: '', status: 'Activo', hourlyRate: 20 })}
-                  className="bg-[#1A1A1A] hover:bg-[#2A2A2A] p-2.5 rounded-xl text-left border border-[#222222] cursor-pointer"
-                >
-                  <span className="text-[10px] font-bold text-gray-400 block">Admin (Sin cuenta)</span>
-                  <span className="text-[9px] text-gray-550 block">Forzar Login Admin</span>
-                </button>
-              )}
-
-              {/* Waiter Button */}
-              {waiterDemo ? (
-                <button
-                  onClick={() => handleQuickLogin(waiterDemo)}
-                  className="bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#222222] hover:border-blue-500/40 p-2.5 rounded-xl text-left transition-all cursor-pointer group"
-                >
-                  <span className="text-[10px] font-bold text-gray-400 block group-hover:text-white">Mesero Juan</span>
-                  <span className="text-[9px] text-blue-400 font-mono block mt-0.5">user: mesero</span>
-                  <span className="text-[9px] text-gray-450 font-mono block">pass: mesero123</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => onLogin({ id: 's3', name: 'Mesero Demo', role: 'Mesero', phone: '', email: '', status: 'Activo', hourlyRate: 10 })}
-                  className="bg-[#1A1A1A] hover:bg-[#2A2A2A] p-2.5 rounded-xl text-left border border-[#222222] cursor-pointer"
-                >
-                  <span className="text-[10px] font-bold text-gray-400 block">Mesero (Sin cuenta)</span>
-                  <span className="text-[9px] text-gray-555 block">Forzar Login Mesero</span>
-                </button>
-              )}
-            </div>
-            <p className="text-[9px] text-gray-500 text-center leading-normal italic mt-1 bg-[#151515] p-2 rounded border border-[#1E1E1E]">
-              💡 El administrador puede crear más cuentas, cambiar cargos y contraseñas de todo el personal en el módulo de <strong className="text-gray-300">Personal</strong>.
+          {/* Production System Info bar */}
+          <div className="mt-5 pt-4 border-t border-[#1F1F1F] text-center">
+            <p className="text-[10px] text-gray-500 leading-normal">
+              Para registrar nuevos colaboradores, restablecer contraseñas o modificar permisos de rol, ingrese como <strong className="text-gray-300">Administrador</strong> y acceda al panel de <span className="text-[#C5A059] font-medium">Gestión de Personal</span>.
             </p>
           </div>
 

@@ -90,20 +90,36 @@ export default function App() {
     const saved = localStorage.getItem('sv_rest_staff');
     let loaded: StaffMember[] = saved ? JSON.parse(saved) : INITIAL_STAFF;
     
-    // Auto-migrate old default '123' passwords to keep admin & meseros distinct
+    // Auto-migrate to the new, secure, unique password defaults for each employee
     let hasUpdated = false;
     loaded = loaded.map(member => {
-      if (member.username === 'admin' && member.password === '123') {
+      if (member.id === 's1' && !member.username) {
         hasUpdated = true;
-        return { ...member, password: 'admin123' };
+        return { ...member, username: 'carlos.chef', password: 'chef9421' };
       }
-      if (member.username === 'mesero' && member.password === '123') {
+      if (member.id === 's2' && !member.username) {
         hasUpdated = true;
-        return { ...member, password: 'mesero123' };
+        return { ...member, username: 'sofia.chef', password: 'chef3827' };
       }
-      if (member.username === 'mesero2' && member.password === '123') {
+      if (member.id === 's3' && (member.username === 'mesero' || !member.username)) {
         hasUpdated = true;
-        return { ...member, password: 'mesero456' };
+        return { ...member, username: 'juan.mesero', password: 'serv7412' };
+      }
+      if (member.id === 's4' && (member.username === 'mesero2' || !member.username)) {
+        hasUpdated = true;
+        return { ...member, username: 'mariana.mesero', password: 'serv8523' };
+      }
+      if (member.id === 's5' && !member.username) {
+        hasUpdated = true;
+        return { ...member, username: 'luis.mesero', password: 'serv9634' };
+      }
+      if (member.id === 's6' && !member.username) {
+        hasUpdated = true;
+        return { ...member, username: 'elena.caja', password: 'caja1590' };
+      }
+      if (member.id === 's7' && (member.username === 'admin' || !member.username)) {
+        hasUpdated = true;
+        return { ...member, username: 'jorge.admin', password: 'admin8520' };
       }
       return member;
     });

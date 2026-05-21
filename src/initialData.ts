@@ -34,13 +34,13 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
 ];
 
 export const INITIAL_STAFF: StaffMember[] = [
-  { id: 's1', name: 'Carlos Mendoza', role: 'Chef', phone: '+52 55 1234 5678', email: 'carlos.m@restaurante.com', status: 'Activo', hourlyRate: 15.00 },
-  { id: 's2', name: 'Sofía Valenzuela', role: 'Chef', phone: '+52 55 8765 4321', email: 'sofia.v@restaurante.com', status: 'Activo', hourlyRate: 14.50 },
-  { id: 's3', name: 'Juan Carlos Gómez', role: 'Mesero', phone: '+52 55 1122 3344', email: 'juan.g@restaurante.com', status: 'Activo', hourlyRate: 8.50, username: 'mesero', password: 'mesero123' },
-  { id: 's4', name: 'Mariana Peralta', role: 'Mesero', phone: '+52 55 5566 7788', email: 'mariana.p@restaurante.com', status: 'Activo', hourlyRate: 8.50, username: 'mesero2', password: 'mesero456' },
-  { id: 's5', name: 'Luis Felipe Ruiz', role: 'Mesero', phone: '+52 55 9900 1122', email: 'luis.r@restaurante.com', status: 'Activo', hourlyRate: 8.50 },
-  { id: 's6', name: 'Elena Rostova', role: 'Cajero', phone: '+52 55 4433 2211', email: 'elena.r@restaurante.com', status: 'Activo', hourlyRate: 10.00 },
-  { id: 's7', name: 'Jorge Henao', role: 'Administrador', phone: '+52 55 7788 9900', email: 'jorge.h@restaurante.com', status: 'Activo', hourlyRate: 20.00, username: 'admin', password: 'admin123' },
+  { id: 's1', name: 'Carlos Mendoza', role: 'Chef', phone: '+52 55 1234 5678', email: 'carlos.m@restaurante.com', status: 'Activo', hourlyRate: 15.00, username: 'carlos.chef', password: 'chef9421' },
+  { id: 's2', name: 'Sofía Valenzuela', role: 'Chef', phone: '+52 55 8765 4321', email: 'sofia.v@restaurante.com', status: 'Activo', hourlyRate: 14.50, username: 'sofia.chef', password: 'chef3827' },
+  { id: 's3', name: 'Juan Carlos Gómez', role: 'Mesero', phone: '+52 55 1122 3344', email: 'juan.g@restaurante.com', status: 'Activo', hourlyRate: 8.50, username: 'juan.mesero', password: 'serv7412' },
+  { id: 's4', name: 'Mariana Peralta', role: 'Mesero', phone: '+52 55 5566 7788', email: 'mariana.p@restaurante.com', status: 'Activo', hourlyRate: 8.50, username: 'mariana.mesero', password: 'serv8523' },
+  { id: 's5', name: 'Luis Felipe Ruiz', role: 'Mesero', phone: '+52 55 9900 1122', email: 'luis.r@restaurante.com', status: 'Activo', hourlyRate: 8.50, username: 'luis.mesero', password: 'serv9634' },
+  { id: 's6', name: 'Elena Rostova', role: 'Cajero', phone: '+52 55 4433 2211', email: 'elena.r@restaurante.com', status: 'Activo', hourlyRate: 10.00, username: 'elena.caja', password: 'caja1590' },
+  { id: 's7', name: 'Jorge Henao', role: 'Administrador', phone: '+52 55 7788 9900', email: 'jorge.h@restaurante.com', status: 'Activo', hourlyRate: 20.00, username: 'jorge.admin', password: 'admin8520' },
 ];
 
 export const INITIAL_SHIFTS: Shift[] = [
