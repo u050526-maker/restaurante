@@ -93,33 +93,33 @@ export default function App() {
     // Auto-migrate to the new, secure, unique password defaults for each employee
     let hasUpdated = false;
     loaded = loaded.map(member => {
-      if (member.id === 's1' && !member.username) {
+      if (member.id === 's1' && (member.password === 'chef9421' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'carlos.chef', password: 'chef9421' };
+        return { ...member, username: 'carlos.chef', password: '9421' };
       }
-      if (member.id === 's2' && !member.username) {
+      if (member.id === 's2' && (member.password === 'chef3827' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'sofia.chef', password: 'chef3827' };
+        return { ...member, username: 'sofia.chef', password: '3827' };
       }
-      if (member.id === 's3' && (member.username === 'mesero' || !member.username)) {
+      if (member.id === 's3' && (member.password === 'serv7412' || member.username === 'mesero' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'juan.mesero', password: 'serv7412' };
+        return { ...member, username: 'juan.mesero', password: '7412' };
       }
-      if (member.id === 's4' && (member.username === 'mesero2' || !member.username)) {
+      if (member.id === 's4' && (member.password === 'serv8523' || member.username === 'mesero2' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'mariana.mesero', password: 'serv8523' };
+        return { ...member, username: 'mariana.mesero', password: '8523' };
       }
-      if (member.id === 's5' && !member.username) {
+      if (member.id === 's5' && (member.password === 'serv9634' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'luis.mesero', password: 'serv9634' };
+        return { ...member, username: 'luis.mesero', password: '9634' };
       }
-      if (member.id === 's6' && !member.username) {
+      if (member.id === 's6' && (member.password === 'caja1590' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'elena.caja', password: 'caja1590' };
+        return { ...member, username: 'elena.caja', password: '1590' };
       }
-      if (member.id === 's7' && (member.username === 'admin' || !member.username)) {
+      if (member.id === 's7' && (member.password === 'admin8520' || member.username === 'admin' || !member.username)) {
         hasUpdated = true;
-        return { ...member, username: 'jorge.admin', password: 'admin8520' };
+        return { ...member, username: 'jorge.admin', password: '8520' };
       }
       return member;
     });
