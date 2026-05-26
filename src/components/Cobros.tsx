@@ -134,21 +134,21 @@ export default function Cobros({
   return (
     <div className="space-y-6" id="cobros-main-container">
       {/* Header */}
-      <div className="pb-4 border-b border-[#2A2A2A]">
-        <h1 className="text-2xl font-display font-semibold text-[#C5A059] tracking-tight">Caja & Cobros de Cuentas</h1>
-        <p className="text-sm text-gray-400 mt-1">Saca la cuenta de las mesas, aplica descuentos, calcula cambios y procesa facturas.</p>
+      <div className="pb-4 border-b border-zinc-200">
+        <h1 className="text-2xl font-display font-semibold text-zinc-900 tracking-tight">Caja & Cobros</h1>
+        <p className="text-xs text-zinc-500 mt-1">Sabor & Gestión • Gestión financiera e impresión de tickets.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Panel Izquierdo: Formulario de Cobro */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-[#141414] p-6 rounded-xl border border-[#2A2A2A] shadow-xs">
-            <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Cerrar Orden de Mesa</h3>
+          <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-2xs">
+            <h3 className="text-sm font-semibold text-zinc-950 mb-4 uppercase tracking-wider font-sans">Cerrar Orden de Mesa</h3>
             
             <form onSubmit={handleProcessPayment} className="space-y-5">
               {/* Selector de Mesa */}
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-gray-400 block">Paso 1: Selecciona la mesa para cobrar</label>
+                <label className="text-xs font-semibold text-zinc-500 block">Paso 1: Selecciona la mesa para cobrar</label>
                 <select
                   value={selectedTableId}
                   onChange={(e) => {
@@ -158,27 +158,27 @@ export default function Cobros({
                     setChangeAmount(null);
                   }}
                   required
-                  className="w-full text-xs px-3 py-2.5 border border-[#2A2A2A] rounded-lg focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white shadow-xs max-w-md"
+                  className="w-full text-xs px-3 py-2.5 border border-zinc-200 rounded-lg focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-900 shadow-3xs max-w-md focus:outline-hidden"
                 >
-                  <option value="" className="bg-[#141414] text-gray-400">-- Selecciona una mesa con cuenta activa --</option>
+                  <option value="" className="bg-white text-zinc-400">-- Selecciona una mesa con cuenta activa --</option>
                   {billingTables.map(t => (
-                    <option key={t.id} value={t.id} className="bg-[#141414] text-white">
+                    <option key={t.id} value={t.id} className="bg-white text-zinc-850">
                       Mesa {t.number} ({t.status === 'Buscando Cuenta' ? '🧾 Pidiendo Cuenta' : 'Ocupada'})
                     </option>
                   ))}
                 </select>
                 {billingTables.length === 0 && (
-                  <p className="text-xs text-rose-400 font-medium">No hay ninguna mesa ocupada para cobrar en este momento.</p>
+                  <p className="text-xs text-zinc-500 font-medium">No hay ninguna mesa ocupada para cobrar en este momento.</p>
                 )}
               </div>
 
               {currentOrder ? (
-                <div className="space-y-6 border-t border-[#2A2A2A] pt-5">
+                <div className="space-y-6 border-t border-zinc-150 pt-5">
                   {/* Fila de Método de pago y Descuento */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {/* Método de Pago */}
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-gray-400 block">Paso 2: Canal de Pago</label>
+                      <label className="text-xs font-semibold text-zinc-500 block">Paso 2: Canal de Pago</label>
                       <div className="grid grid-cols-3 gap-2" id="payment-methods-selector">
                         {(['Efectivo', 'Tarjeta', 'Transferencia'] as Sale['paymentMethod'][]).map(method => (
                           <button
@@ -188,10 +188,10 @@ export default function Cobros({
                               setPaymentMethod(method);
                               setMontoRecibido('');
                             }}
-                            className={`py-3 px-2 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                            className={`py-3 px-2 rounded-lg border text-xs font-bold flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                               paymentMethod === method
-                                ? 'bg-[#C5A059] text-black border-transparent shadow-xs shadow-[#C5A059]/10'
-                                : 'bg-[#1F1F1F] text-gray-400 border-[#2A2A2A] hover:bg-[#2A2A2A] hover:text-white'
+                                ? 'bg-zinc-900 text-white border-transparent shadow shadow-zinc-800/10'
+                                : 'bg-white text-zinc-500 border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900'
                             }`}
                           >
                             {method === 'Efectivo' && <DollarSign className="w-4 h-4" />}
@@ -205,29 +205,29 @@ export default function Cobros({
 
                     {/* Descuentos & Programa de Fidelidad */}
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-gray-400 block">Paso 3: Descuentos y Promociones</label>
-                      <div className="space-y-2 bg-[#1F1F1F] p-3 rounded-lg border border-[#2A2A2A]">
+                      <label className="text-xs font-semibold text-zinc-500 block">Paso 3: Descuentos y Promociones</label>
+                      <div className="space-y-2 bg-zinc-50 p-3 rounded-lg border border-zinc-205">
                         {currentCustomer ? (
                           <div className="space-y-2">
                             <div className="flex items-center justify-between text-xs">
-                              <span className="flex items-center gap-1.5 text-gray-300"><User className="w-3.5 h-3.5 text-gray-500" />{currentCustomer.name}</span>
-                              <span className="font-mono text-[#C5A059] font-bold">{currentCustomer.points} pts</span>
+                              <span className="flex items-center gap-1.5 text-zinc-700 font-medium"><User className="w-3.5 h-3.5 text-zinc-400" />{currentCustomer.name}</span>
+                              <span className="font-mono text-[#9C7E46] font-bold">{currentCustomer.points} pts</span>
                             </div>
                             <button
                               type="button"
                               onClick={handleApplyPointsDiscount}
-                              className="w-full text-center bg-[#141414] border border-[#C5A059]/30 hover:bg-[#1C1C1C] text-[#C5A059] text-[11px] font-bold py-1.5 rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer"
+                              className="w-full text-center bg-white border border-[#9C7E46]/35 hover:bg-[#FAF9F6] text-[#9C7E46] text-[11px] font-bold py-1.5 rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer shadow-3xs"
                             >
                               <Award className="w-3.5 h-3.5" />
                               Redimir 50 puntos (-$5.00)
                             </button>
                           </div>
                         ) : (
-                          <p className="text-[11px] text-gray-500 italic">No hay ningún cliente fidelizado registrado en esta comanda para canjear puntos.</p>
+                          <p className="text-[11px] text-zinc-400 italic">No hay ningún cliente fidelizado registrado en esta comanda para canjear puntos.</p>
                         )}
 
-                        <div className="pt-2 border-t border-[#2A2A2A]/60 flex items-center gap-2">
-                          <span className="text-[11px] text-gray-400 font-semibold shrink-0">Desc. Manual ($):</span>
+                        <div className="pt-2 border-t border-zinc-200/80 flex items-center gap-2">
+                          <span className="text-[11px] text-zinc-550 font-semibold shrink-0">Desc. Manual ($):</span>
                           <input
                             type="number"
                             min="0"
@@ -235,7 +235,7 @@ export default function Cobros({
                             value={discountAmount || ''}
                             onChange={(e) => setDiscountAmount(Math.max(0, parseFloat(e.target.value) || 0))}
                             placeholder="0.00"
-                            className="w-24 text-xs px-2 py-1 bg-[#0D0D0D] border border-[#2A2A2A] rounded focus:outline-hidden font-mono text-[#C5A059] font-bold"
+                            className="w-24 text-xs px-2 py-1 bg-white border border-zinc-200 rounded focus:outline-hidden font-mono text-[#9C7E46] font-bold"
                           />
                         </div>
                       </div>
@@ -244,11 +244,11 @@ export default function Cobros({
 
                   {/* Detalle de Cambio para Pago con Efectivo */}
                   {paymentMethod === 'Efectivo' && (
-                    <div className="bg-blue-955/20 p-4 rounded-xl border border-blue-900/40 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-sky-50 p-4 rounded-xl border border-sky-100 grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-blue-300 block">Monto Recibido ($)</label>
+                        <label className="text-xs font-semibold text-sky-800 block">Monto Recibido ($)</label>
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-3 flex items-center font-bold text-[#C5A059]">$</span>
+                          <span className="absolute inset-y-0 left-3 flex items-center font-bold text-[#9C7E46]">$</span>
                           <input
                             type="number"
                             required
@@ -256,43 +256,43 @@ export default function Cobros({
                             step="0.01"
                             value={montoRecibido}
                             onChange={(e) => setMontoRecibido(e.target.value)}
-                            placeholder="Monto entregado por el cliente"
-                            className="w-full text-sm pl-7 pr-3 py-2 border border-blue-900/45 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#0D0D0D] font-mono font-bold text-[#C5A059]"
+                            placeholder="Efectivo entregado por cliente"
+                            className="w-full text-sm pl-7 pr-3 py-2 border border-sky-200 rounded-lg focus:outline-hidden bg-white font-mono font-bold text-[#9C7E46]"
                           />
                         </div>
                       </div>
 
                       <div className="flex flex-col justify-center space-y-0.5">
-                        <span className="text-[11px] text-blue-400 font-bold uppercase tracking-wider block">Cambio a entregar:</span>
+                        <span className="text-[10px] text-sky-700 font-bold uppercase tracking-wider block">Cambio a entregar:</span>
                         {changeAmount !== null ? (
-                          <span className="text-2xl font-black font-mono text-white">${changeAmount.toFixed(2)}</span>
+                          <span className="text-2xl font-black font-mono text-zinc-900">${changeAmount.toFixed(2)}</span>
                         ) : (
-                          <span className="text-xs font-semibold text-rose-400 font-mono">Esperando monto suficiente...</span>
+                          <span className="text-xs font-semibold text-rose-650 font-mono">Esperando pago...</span>
                         )}
                       </div>
                     </div>
                   )}
 
                   {/* Caja de Checkout Fuerte */}
-                  <div className="border-t border-[#2A2A2A] pt-4 flex flex-col md:flex-row items-center justify-between gap-4 bg-[#1F1F1F]/40 p-4 rounded-xl">
+                  <div className="border-t border-zinc-150 pt-4 flex flex-col md:flex-row items-center justify-between gap-4 bg-zinc-50/50 p-4 rounded-xl border border-zinc-200">
                     <div className="space-y-1 text-center md:text-left">
-                      <p className="text-xs text-gray-400 font-semibold">Resumen de Cargo • Mesa {currentOrder.tableNumber}</p>
+                      <p className="text-[10px] text-zinc-450 font-bold uppercase tracking-wider">Cierre total • Mesa {currentOrder.tableNumber}</p>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-black text-white">${finalTotal.toFixed(2)}</span>
-                        <span className="text-xs text-gray-500 font-mono line-through">${rawTotal.toFixed(2)}</span>
+                        <span className="text-2xl font-black text-zinc-900">${finalTotal.toFixed(2)}</span>
+                        <span className="text-xs text-zinc-400 font-mono line-through">${rawTotal.toFixed(2)}</span>
                       </div>
                     </div>
                     <button
                       type="submit"
-                      className="w-full md:w-auto px-6 py-3 bg-[#C5A059] hover:bg-[#D5B069] text-black text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm font-sans transition-colors cursor-pointer"
+                      className="w-full md:w-auto px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-xs font-sans transition-colors cursor-pointer"
                     >
-                      Procesar Venta y Ver Ticket 🧾
+                      Procesar Pago & Registrar Venta
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="p-8 border border-dashed border-[#2A2A2A] rounded-xl text-center text-gray-550 text-xs">
-                  Por favor, selecciona una mesa de comedor en el selector superior para desplegar su estado de deudas y detalle de cobros.
+                <div className="p-8 border border-dashed border-zinc-200 rounded-xl text-center text-zinc-400 text-xs">
+                  Selecciona una mesa ocupada en el sistema para calcular montos, aplicar descuentos y emitir el ticket correspondiente.
                 </div>
               )}
             </form>
@@ -302,114 +302,114 @@ export default function Cobros({
         {/* Panel Derecho: Ticket de Control / Éxito */}
         <div className="space-y-4">
           {showSuccessMessage && (
-            <div className="bg-emerald-955/20 border border-emerald-900/30 p-4 rounded-xl flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs font-bold text-emerald-400">¡Pago procesado con Éxito!</p>
-                <p className="text-[11px] text-gray-300 mt-0.5">La mesa ha quedado libre, se cerró el ticket en el historial de ventas y se acreditaron los puntos del cliente.</p>
+                <p className="text-xs font-bold text-emerald-800">¡Pago procesado con Éxito!</p>
+                <p className="text-[11px] text-zinc-550 mt-0.5">La mesa ahora está libre en el plano de comedor, la comanda fue guardada en el historial general y los puntos fiscales se cargaron.</p>
                 <button 
                   onClick={() => setShowSuccessMessage(false)}
-                  className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 hover:underline mt-2 inline-block cursor-pointer"
+                  className="text-[10px] font-bold text-emerald-700 hover:text-emerald-900 hover:underline mt-2 inline-block cursor-pointer animate-pulse"
                 >
-                  Entendido
+                  Confirmar ticket
                 </button>
               </div>
             </div>
           )}
 
           {printedReceipt ? (
-            <div className="bg-[#1C1C1C]/95 p-6 rounded-xl border border-dashed border-[#2A2A2A] shadow-xs relative overflow-hidden font-mono text-xs text-gray-300 space-y-4" id="printed-thermal-ticket">
-              <div className="absolute top-3 right-3 w-8 h-8 opacity-15 pointer-events-none">
-                <Printer className="w-full h-full text-[#C5A059]" />
+            <div className="bg-white p-6 rounded-xl border-2 border-dashed border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.015)] relative overflow-hidden font-mono text-xs text-zinc-800 space-y-4" id="printed-thermal-ticket">
+              <div className="absolute top-3 right-3 w-8 h-8 opacity-10 pointer-events-none">
+                <Printer className="w-full h-full text-[#9C7E46]" />
               </div>
 
               {/* Encabezado del restaurante */}
-              <div className="text-center space-y-1 pb-4 border-b border-dashed border-[#2A2A2A]">
-                <h4 className="font-extrabold text-sm text-white uppercase tracking-wider">SABOR & GESTIÓN</h4>
-                <p className="text-[10px] text-gray-500">Av. Gastronómica #456</p>
-                <p className="text-[10px] text-gray-500">RFC: SEG881023-RTA</p>
-                <p className="text-[10px] text-gray-500">Tel: +52 55 1234 5678</p>
+              <div className="text-center space-y-1 pb-4 border-b border-dashed border-zinc-200">
+                <h4 className="font-black text-sm text-zinc-900 uppercase tracking-widest">SABOR & GESTIÓN</h4>
+                <p className="text-[9px] text-zinc-400 uppercase">Av. Gastronómica #456, Centro</p>
+                <p className="text-[9px] text-zinc-400">RFC: SEG881023-RTA</p>
+                <p className="text-[9px] text-zinc-400">Tel: +52 55 1234 5678</p>
               </div>
 
               {/* Info de Transacción */}
-              <div className="space-y-1 text-[10px] text-gray-400">
+              <div className="space-y-1 text-[10px] text-zinc-500">
                 <div className="flex justify-between">
-                  <span>TICKET:</span>
-                  <span className="text-white font-bold">#{printedReceipt.orderId.substring(4, 10).toUpperCase()}</span>
+                  <span>TRANSACCIÓN:</span>
+                  <span className="text-zinc-900 font-bold">#{printedReceipt.orderId.substring(4, 10).toUpperCase()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>MESA:</span>
-                  <span className="text-white font-bold">{printedReceipt.tableNumber}</span>
+                  <span>MESA COMEDOR:</span>
+                  <span className="text-zinc-900 font-bold">{printedReceipt.tableNumber}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>CLIENTE:</span>
-                  <span className="text-white">{printedReceipt.customerName}</span>
+                  <span className="text-zinc-900 font-semibold">{printedReceipt.customerName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>FECHA:</span>
+                  <span>EMISIÓN:</span>
                   <span>{new Date(printedReceipt.timestamp).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' })}</span>
                 </div>
               </div>
 
               {/* Detalles de Platillos */}
-              <div className="border-t border-b border-dashed border-[#2A2A2A] py-3 space-y-2">
-                <div className="flex text-[10px] font-extrabold text-[#C5A059]">
+              <div className="border-t border-b border-dashed border-zinc-200 py-3 space-y-2">
+                <div className="flex text-[10px] font-bold text-[#9C7E46] uppercase tracking-wider">
                   <span className="w-8">CANT</span>
-                  <span className="flex-1">DESCRIPCIÓN</span>
-                  <span className="w-16 text-right">TOTAL</span>
+                  <span className="flex-1">DETALLE</span>
+                  <span className="w-16 text-right">M.N</span>
                 </div>
 
                 {printedReceipt.items.map((item: any, idx: number) => (
-                  <div key={idx} className="flex text-[10px] text-gray-300">
-                    <span className="w-8 font-bold text-[#C5A059]">{item.quantity}x</span>
+                  <div key={idx} className="flex text-[10px] text-zinc-700">
+                    <span className="w-8 font-bold text-[#9C7E46]">{item.quantity}x</span>
                     <span className="flex-1 truncate">{item.name}</span>
-                    <span className="w-16 text-right font-semibold text-white">${(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="w-16 text-right font-medium text-zinc-900">${(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
 
               {/* Totales ticket */}
-              <div className="space-y-1 text-xs text-right pl-12 pr-1 text-gray-400">
+              <div className="space-y-1 text-xs text-right pl-12 pr-1 text-zinc-500">
                 <div className="flex justify-between">
                   <span>SUBTOTAL:</span>
-                  <span className="text-gray-200">${printedReceipt.subtotal.toFixed(2)}</span>
+                  <span className="text-zinc-900">${printedReceipt.subtotal.toFixed(2)}</span>
                 </div>
                 {printedReceipt.discount > 0 && (
-                  <div className="flex justify-between text-rose-400 font-semibold italic">
-                    <span>DESC. APLICADO:</span>
+                  <div className="flex justify-between text-rose-600 font-semibold italic">
+                    <span>DESCUENTO CANJE:</span>
                     <span>-${printedReceipt.discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>IVA (10%):</span>
-                  <span className="text-gray-200">${printedReceipt.tax.toFixed(2)}</span>
+                  <span className="text-zinc-900">${printedReceipt.tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm font-extrabold text-white pt-1.5 border-t border-dashed border-[#2A2A2A]">
-                  <span className="text-[#C5A059]">PAGO TOTAL:</span>
-                  <span className="text-[#C5A059]">${printedReceipt.total.toFixed(2)}</span>
+                <div className="flex justify-between text-sm font-bold text-zinc-950 pt-1.5 border-t border-dashed border-zinc-200">
+                  <span className="text-[#9C7E46] uppercase font-bold">TOTAL NETO:</span>
+                  <span className="text-[#9C7E46] font-extrabold">${printedReceipt.total.toFixed(2)}</span>
                 </div>
               </div>
 
               {/* Info cambio */}
-              <div className="bg-[#141414] p-2.5 rounded border border-[#2A2A2A] space-y-1 text-[10px] text-gray-400">
+              <div className="bg-zinc-50 p-2.5 rounded border border-zinc-150 space-y-1 text-[10px] text-zinc-500">
                 <div className="flex justify-between">
-                  <span>MÉTODO PAGO:</span>
-                  <span className="font-bold text-[#C5A059] uppercase">{printedReceipt.paymentMethod}</span>
+                  <span>MEDIO:</span>
+                  <span className="font-bold text-[#9C7E46] uppercase">{printedReceipt.paymentMethod}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>PAGÓ CON:</span>
-                  <span className="text-gray-200">${printedReceipt.montoRecibido.toFixed(2)}</span>
+                  <span>RECIBIDO:</span>
+                  <span className="text-zinc-700 font-semibold">${printedReceipt.montoRecibido.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>CAMB. ENTREGADO:</span>
-                  <span className="font-bold text-white">${printedReceipt.change.toFixed(2)}</span>
+                  <span>SU CAMBIO:</span>
+                  <span className="font-bold text-zinc-900">${printedReceipt.change.toFixed(2)}</span>
                 </div>
               </div>
 
               {/* Pie del ticket */}
-              <div className="text-center space-y-1 pt-2 text-[9px] text-gray-500">
-                <p>¡MUCHAS GRACIAS POR SU VISITA!</p>
-                <p className="font-bold text-gray-400">Sabor memorable, experiencia inigualable.</p>
+              <div className="text-center space-y-1 pt-2 text-[9px] text-zinc-400">
+                <p>GRACIAS POR ELEGIR SABOR & GESTIÓN</p>
+                <p className="font-semibold text-zinc-500">Sabor memorable, experiencia memorable.</p>
               </div>
 
               <button
@@ -417,17 +417,17 @@ export default function Cobros({
                 onClick={() => {
                   window.print();
                 }}
-                className="w-full text-center py-2 bg-[#2A2A2A] hover:bg-[#343434] text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="w-full text-center py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Printer className="w-4 h-4" />
-                Imprimir Copia Física
+                Imprimir Comprobante Fiscal
               </button>
             </div>
           ) : (
-            <div className="bg-[#141414] p-6 rounded-xl border border-[#2A2A2A] shadow-xs text-center text-gray-500 py-24 flex flex-col items-center justify-center gap-2">
-              <Ticket className="w-10 h-10 text-[#C5A059]/30" />
-              <p className="text-xs font-semibold text-gray-300 uppercase tracking-widest">Ticket Térmico Virtual</p>
-              <p className="text-[11px] max-w-[180px] leading-relaxed mt-1 text-gray-500">Una vez procesado el abono de la mesa, aquí se generará una factura o ticket térmico imprimible en tiempo real.</p>
+            <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-2xs text-center text-zinc-400 py-24 flex flex-col items-center justify-center gap-2">
+              <Ticket className="w-10 h-10 text-zinc-300" />
+              <p className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-mono">TICKET ELECTRÓNICO</p>
+              <p className="text-[11px] max-w-[180px] leading-relaxed mt-1 text-zinc-500">Al cerrar la liquidación de cualquier mesa activa, el ticket térmico formal se pre-visualizará e imprimirá instantáneamente en esta sección.</p>
             </div>
           )}
         </div>

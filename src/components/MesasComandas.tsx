@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, X, Coffee, User, ShoppingBag, PlusCircle, Search, Edit2 } from 'lucide-react';
+import { Plus, Minus, X, Coffee, User, ShoppingBag, PlusCircle, Search } from 'lucide-react';
 import { Table, MenuItem, StaffMember, Customer, Order, OrderDetail, OrderStatus } from '../types';
 
 interface MesasComandasProps {
@@ -10,7 +10,7 @@ interface MesasComandasProps {
   activeOrders: Order[];
   onOpenTable: (tableId: string, meseroId: string, chefId: string, customerId?: string, items?: OrderDetail[], reservationName?: string) => void;
   onUpdateOrder: (orderId: string, updates: Partial<Order>) => void;
-  onUpdateTableStatus: (tableId: string, status: Table['status']) => void;
+  onUpdateTableStatus: (tableId: string, status: Table['status'], reservationName?: string) => void;
   setActiveTab: (tab: string) => void;
   setSelectedTableForCobros: (tableId: string) => void;
   currentUser?: StaffMember | null;
@@ -40,6 +40,7 @@ export default function MesasComandas({
   const [cartItems, setCartItems] = useState<OrderDetail[]>([]);
   const [menuSearch, setMenuSearch] = useState('');
   const [menuFilter, setMenuFilter] = useState<'Todos' | 'Comidas' | 'Bebidas' | 'Postres' | 'Entradas'>('Todos');
+  const [newReservationInput, setNewReservationInput] = useState('');
 
   // Filter staff by roles
   const waiters = staff.filter(s => s.role === 'Mesero' && s.status === 'Activo');
@@ -52,16 +53,18 @@ export default function MesasComandas({
 
   const handleSelectTable = (table: Table) => {
     setSelectedTable(table);
-    if (table.status === 'Libre') {
-      setIsOpeningModal(true);
-      // Reset opening wizard state
-      const defaultWaiterId = (currentUser && currentUser.role === 'Mesero') ? currentUser.id : (waiters[0]?.id || '');
-      setSelectedWaiterId(defaultWaiterId);
-      setSelectedChefId(chefs[0]?.id || '');
-      setSelectedCustomerId('');
-      setReservationName('');
-      setCartItems([]);
-    }
+    setNewReservationInput('');
+  };
+
+  const handleOpenComandaWizard = (tableToOpen: Table) => {
+    setIsOpeningModal(true);
+    // Reset opening wizard state
+    const defaultWaiterId = (currentUser && currentUser.role === 'Mesero') ? currentUser.id : (waiters[0]?.id || '');
+    setSelectedWaiterId(defaultWaiterId);
+    setSelectedChefId(chefs[0]?.id || '');
+    setSelectedCustomerId('');
+    setReservationName(tableToOpen.reservationName || '');
+    setCartItems([]);
   };
 
   const addToCart = (item: MenuItem) => {
@@ -131,40 +134,49 @@ export default function MesasComandas({
   return (
     <div className="space-y-6" id="mesas-comandas-view">
       {/* Header */}
-      <div className="pb-4 border-b border-[#2A2A2A]">
-        <h1 className="text-2xl font-display font-semibold text-[#C5A059] tracking-tight">Servicio de Mesas & Comandas</h1>
-        <p className="text-sm text-gray-400 mt-1">Monitorea el estado de las mesas, abre comandas y dale seguimiento a los pedidos.</p>
+      <div className="pb-4 border-b border-zinc-200">
+        <h1 className="text-2xl font-display font-semibold text-zinc-900 tracking-tight">Servicio de Mesas</h1>
+        <p className="text-xs text-zinc-500 mt-1">Sabor & Gestión • Gestión activa del comedor en vivo.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Panel izquierdo: Plano de las Mesas */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-[#141414] p-6 rounded-xl border border-[#2A2A2A] shadow-xs">
+          <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-2xs">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-semibold text-white">Plano de Comedor</h3>
-              <div className="flex flex-wrap gap-3 text-xs">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#1F1F1F] border border-[#2A2A2A]"></span>Libre</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#C5A059]"></span>Ocupada</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>Buscando Cuenta</span>
+              <h3 className="text-sm font-semibold text-zinc-900">Mapa de Distribución</h3>
+              <div className="flex flex-wrap gap-4 text-xs font-medium text-zinc-650">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-white border border-zinc-200 shadow-2xs"></span>Libre
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#9C7E46]"></span>Ocupada
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-sky-500"></span>Pidiendo Cuenta
+                </span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4" id="tables-grid">
               {tables.map(table => {
                 const isSelected = selectedTable?.id === table.id;
-                let bgClass = "bg-[#141414] hover:bg-[#1F1F1F]/40 border-[#2A2A2A] hover:border-gray-500 text-gray-300";
-                let statusBadge = "bg-[#1F1F1F] text-gray-400 border-[#2A2A2A]";
+                let bgClass = "bg-white hover:bg-zinc-50/80 border-zinc-200 text-zinc-600 hover:border-zinc-300";
+                let statusBadge = "bg-zinc-100 text-zinc-550 border-zinc-200";
                 
                 if (table.status === 'Ocupada') {
-                  bgClass = "bg-[#1F1F1F] border-[#C5A059] hover:border-[#D5B069] text-white";
-                  statusBadge = "bg-[#C5A059]/10 text-[#C5A059] border-[#C5A059]/30";
+                  bgClass = "bg-[#FAF9F6]/80 border-[#9C7E46]/80 hover:border-[#9C7E46] text-zinc-900 hover:bg-[#FAF9F6]";
+                  statusBadge = "bg-[#9C7E46]/10 text-[#9C7E46] border-[#9C7E46]/20 font-semibold";
                 } else if (table.status === 'Buscando Cuenta') {
-                  bgClass = "bg-[#1F1F1F] border-blue-505 border-blue-500 hover:border-blue-400 text-white";
-                  statusBadge = "bg-blue-500/10 text-blue-300 border-blue-500/30";
+                  bgClass = "bg-sky-50/50 border-sky-400 hover:border-sky-500 text-zinc-900";
+                  statusBadge = "bg-sky-500/10 text-sky-700 border-sky-200 font-semibold";
+                } else if (table.status === 'Reservada') {
+                  bgClass = "bg-amber-50/20 border-amber-350 hover:border-amber-400 text-zinc-900 hover:bg-amber-50/40";
+                  statusBadge = "bg-amber-500/15 text-amber-800 border-amber-200 font-bold";
                 }
 
                 if (isSelected) {
-                  bgClass += " ring-2 ring-[#C5A059] ring-offset-2 ring-offset-[#0A0A0A]";
+                  bgClass += " ring-2 ring-zinc-900 ring-offset-2 ring-offset-white";
                 }
 
                 const tableOrder = activeOrders.find(o => o.tableId === table.id);
@@ -173,26 +185,27 @@ export default function MesasComandas({
                   <button
                     key={table.id}
                     onClick={() => handleSelectTable(table)}
-                    className={`p-5 rounded-xl border flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer ${bgClass}`}
+                    className={`p-5 rounded-xl border flex flex-col items-center justify-center text-center gap-2.5 transition-all cursor-pointer shadow-3xs ${bgClass}`}
                   >
                     <Coffee className={`w-8 h-8 ${
-                      table.status === 'Ocupada' ? 'text-[#C5A059]' :
-                      table.status === 'Buscando Cuenta' ? 'text-blue-400' : 'text-gray-600'
+                      table.status === 'Ocupada' ? 'text-[#9C7E46]' :
+                      table.status === 'Buscando Cuenta' ? 'text-sky-500' :
+                      table.status === 'Reservada' ? 'text-amber-500' : 'text-zinc-300'
                     }`} />
-                    <span className="text-base font-bold">Mesa {table.number}</span>
+                    <span className="text-base font-bold text-zinc-900">Mesa {table.number}</span>
                     {table.reservationName && (
-                      <span className="text-xs font-bold text-[#C5A059] bg-[#C5A059]/10 border border-[#C5A059]/20 px-2 py-0.5 rounded truncate max-w-full" title={table.reservationName}>
+                      <span className="text-xs font-bold text-[#9C7E46] bg-[#9C7E46]/10 border border-[#9C7E46]/20 px-2 py-0.5 rounded truncate max-w-full" title={table.reservationName}>
                         👤 {table.reservationName}
                       </span>
                     )}
-                    <span className="text-[11px] text-gray-500 font-medium">Capacidad: {table.capacity} paxs</span>
+                    <span className="text-[10px] text-zinc-400 font-semibold block font-mono">CAPACIDAD: {table.capacity} PAX</span>
                     
-                    <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded border ${statusBadge}`}>
-                      {table.status}
+                    <span className={`text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded border ${statusBadge}`}>
+                      {table.status === 'Buscando Cuenta' ? 'Pidiendo Cuenta' : table.status}
                     </span>
 
                     {tableOrder && (
-                      <span className="text-[11px] font-bold text-[#C5A059] bg-[#1F1F1F] px-2 py-0.5 rounded shadow-xs mt-1 border border-[#C5A059]/30">
+                      <span className="text-xs font-bold text-[#9C7E46] bg-white px-2 py-0.5 rounded-md shadow-2xs mt-1 border border-[#9C7E46]/25">
                         ${tableOrder.total.toFixed(2)}
                       </span>
                     )}
@@ -206,36 +219,36 @@ export default function MesasComandas({
         {/* Panel derecho: Detalle de Mesa Seleccionada */}
         <div className="space-y-4">
           {selectedTable && !isOpeningModal && currentActiveOrder ? (
-            <div className="bg-[#141414] p-6 rounded-xl border border-[#2A2A2A] shadow-xs space-y-5" id="active-comanda-detail">
-              <div className="flex items-center justify-between border-b border-[#2A2A2A] pb-3">
+            <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-2xs space-y-5" id="active-comanda-detail">
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
                 <div>
-                  <h3 className="font-bold text-white text-base">Comanda Mesa {selectedTable.number}</h3>
+                  <h3 className="font-bold text-zinc-900 text-base">Comanda Mesa {selectedTable.number}</h3>
                   {selectedTable.reservationName && (
-                    <p className="text-xs font-bold text-[#C5A059] flex items-center gap-1 mt-1 font-sans">
+                    <p className="text-xs font-bold text-[#9C7E46] flex items-center gap-1 mt-1 font-sans">
                       👤 {selectedTable.reservationName}
                     </p>
                   )}
-                  <p className="text-[11px] text-gray-500 mt-1">Orden ID: #{currentActiveOrder.id.substring(4, 9).toUpperCase()}</p>
+                  <p className="text-[10px] text-zinc-400 mt-1 font-mono">ORDEN: #{currentActiveOrder.id.substring(4, 9).toUpperCase()}</p>
                 </div>
                 <button 
                   onClick={() => setSelectedTable(null)}
-                  className="p-1 hover:bg-[#1F1F1F] rounded text-gray-500 hover:text-white transition-colors cursor-pointer"
+                  className="p-1 hover:bg-zinc-100 rounded text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Personal asignado */}
-              <div className="grid grid-cols-2 gap-3 text-xs bg-[#1F1F1F] p-3 rounded-lg border border-[#2A2A2A]">
+              <div className="grid grid-cols-2 gap-3 text-xs bg-zinc-50 p-3 rounded-lg border border-zinc-150">
                 <div>
-                  <span className="text-[10px] text-gray-500 block uppercase font-mono">Mesero</span>
-                  <p className="font-semibold text-gray-200">
+                  <span className="text-[10px] text-zinc-400 block uppercase font-mono font-medium">Mesero</span>
+                  <p className="font-semibold text-zinc-800">
                     {staff.find(s => s.id === currentActiveOrder.meseroId)?.name || 'Sin Asignar'}
                   </p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-gray-500 block uppercase font-mono">Chef</span>
-                  <p className="font-semibold text-gray-200">
+                  <span className="text-[10px] text-zinc-400 block uppercase font-mono font-medium">Chef</span>
+                  <p className="font-semibold text-zinc-800">
                     {staff.find(s => s.id === currentActiveOrder.chefId)?.name || 'Sin Asignar'}
                   </p>
                 </div>
@@ -243,36 +256,36 @@ export default function MesasComandas({
 
               {/* Loyalty Customer */}
               {currentActiveOrder.customerId && (
-                <div className="flex items-center gap-2 text-xs bg-blue-955/20 text-blue-300 p-2.5 rounded-lg border border-blue-900/40">
-                  <User className="w-4 h-4 text-blue-400 shrink-0" />
+                <div className="flex items-center gap-2 text-xs bg-sky-50 text-sky-800 p-2.5 rounded-lg border border-sky-100">
+                  <User className="w-4 h-4 text-sky-600 shrink-0" />
                   <div className="truncate">
-                    <span className="text-[10px] font-mono text-blue-400 uppercase block">Cliente Frecuente</span>
+                    <span className="text-[9px] font-mono text-sky-600 uppercase block font-semibold">Cliente Frecuente</span>
                     <span className="font-semibold">{customers.find(c => c.id === currentActiveOrder.customerId)?.name}</span>
                   </div>
                 </div>
               )}
 
               {/* Lista de platillos */}
-              <div className="space-y-3.5 max-h-[220px] overflow-y-auto pr-1">
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Artículos ({currentActiveOrder.items.reduce((acc, i) => acc + i.quantity, 0)})</span>
+              <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Artículos ({currentActiveOrder.items.reduce((acc, i) => acc + i.quantity, 0)})</span>
                 
                 {currentActiveOrder.items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-start gap-4 text-xs py-1.5 border-b border-[#2A2A2A]/40 last:border-0">
+                  <div key={index} className="flex justify-between items-start gap-4 text-xs py-1.5 border-b border-zinc-100 last:border-0">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-[#C5A059] bg-[#C5A059]/15 px-1.5 py-0.5 rounded shrink-0 border border-[#C5A059]/20">{item.quantity}x</span>
-                        <p className="font-semibold text-gray-200 truncate">{item.name}</p>
+                        <span className="font-bold text-[#9C7E46] bg-[#9C7E46]/10 px-1.5 py-0.5 rounded shrink-0 border border-[#9C7E46]/20">{item.quantity}x</span>
+                        <p className="font-semibold text-zinc-800 truncate">{item.name}</p>
                       </div>
-                      {item.notes && <p className="text-[11px] italic text-rose-450 pl-8 mt-0.5">"{item.notes}"</p>}
+                      {item.notes && <p className="text-[11px] italic text-rose-600 pl-8 mt-0.5">"{item.notes}"</p>}
                     </div>
-                    <span className="font-mono text-gray-300 shrink-0">${(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-mono text-zinc-600 shrink-0 font-medium">${(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
 
               {/* Control de estatus de la cocina */}
-              <div className="space-y-2 pt-2 border-t border-[#2A2A2A]">
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Estado del Servicio</span>
+              <div className="space-y-2.5 pt-2 border-t border-zinc-100">
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Estado del Servicio</span>
                 
                 <div className="grid grid-cols-4 gap-1 text-[10px] font-mono font-medium text-center">
                   {(['Pendiente', 'En Cocina', 'Listo', 'Entregado'] as OrderStatus[]).map((st) => {
@@ -284,9 +297,9 @@ export default function MesasComandas({
                         key={st}
                         onClick={() => onUpdateOrder(currentActiveOrder.id, { status: st })}
                         className={`py-1.5 rounded-md border text-center transition-all cursor-pointer ${
-                          isCurrent ? 'bg-[#C5A059] text-black border-transparent shadow-xs font-bold' :
-                          isPast ? 'bg-[#1F1F1F]/60 text-[#C5A059] border-[#C5A059]/20' :
-                          'bg-[#141414] text-gray-600 border-[#2A2A2A]'
+                          isCurrent ? 'bg-zinc-900 text-white border-transparent shadow-xs font-bold' :
+                          isPast ? 'bg-[#9C7E46]/10 text-[#9C7E46] border-[#9C7E46]/20 hover:bg-[#9C7E46]/20' :
+                          'bg-white text-zinc-400 border-zinc-200 hover:bg-zinc-50'
                         }`}
                       >
                         {st}
@@ -297,24 +310,24 @@ export default function MesasComandas({
               </div>
 
               {/* Totales */}
-              <div className="pt-3 border-t border-[#2A2A2A] space-y-1.5 text-xs text-gray-400">
+              <div className="pt-3 border-t border-zinc-100 space-y-1.5 text-xs text-zinc-550">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span className="font-mono text-gray-200">${currentActiveOrder.subtotal.toFixed(2)}</span>
+                  <span className="font-mono text-zinc-805 font-medium">${currentActiveOrder.subtotal.toFixed(2)}</span>
                 </div>
                 {currentActiveOrder.discount > 0 && (
-                  <div className="flex justify-between text-rose-400">
+                  <div className="flex justify-between text-rose-600 font-semibold">
                     <span>Descuento:</span>
                     <span className="font-mono">-${currentActiveOrder.discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>Impuesto (10% IVA):</span>
-                  <span className="font-mono text-gray-200">${currentActiveOrder.tax.toFixed(2)}</span>
+                  <span className="font-mono text-zinc-805 font-medium">${currentActiveOrder.tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm text-white font-bold pt-1.5 border-t border-[#2A2A2A]">
+                <div className="flex justify-between text-sm text-zinc-900 font-bold pt-1.5 border-t border-zinc-100">
                   <span>Total:</span>
-                  <span className="font-mono text-white text-[#C5A059]">${currentActiveOrder.total.toFixed(2)}</span>
+                  <span className="font-mono text-[#9C7E46]">${currentActiveOrder.total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -326,39 +339,115 @@ export default function MesasComandas({
                       onUpdateTableStatus(selectedTable.id, 'Buscando Cuenta');
                       setSelectedTable({ ...selectedTable, status: 'Buscando Cuenta' });
                     }}
-                    className="w-full text-center bg-[#1F1F1F] hover:bg-[#2A2A2A]/80 text-white text-xs font-semibold py-2.5 rounded-lg border border-[#2A2A2A] transition-colors cursor-pointer"
+                    className="w-full text-center bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold py-2.5 rounded-lg border border-zinc-200 transition-colors cursor-pointer"
                   >
                     Pedir Cuenta 🧾
                   </button>
                 ) : (
-                  <span className="text-xs bg-blue-955/20 border border-blue-900/40 text-blue-300 font-semibold py-2.5 rounded-lg text-center select-none block col-span-1">
-                    Cuenta Solicitada
+                  <span className="text-xs bg-sky-50 border border-sky-100 text-sky-700 font-bold py-2.5 rounded-lg text-center select-none block col-span-1">
+                    Pedida ✔
                   </span>
                 )}
                 
                 <button
                   onClick={() => handleGoToCheckout(selectedTable.id)}
-                  className="w-full text-center bg-[#C5A059] hover:bg-[#D5B069] text-black text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors cursor-pointer"
+                  className="w-full text-center bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors cursor-pointer shadow-2xs"
                 >
-                  Ir a Cobrar $
+                  Cobrar $
                 </button>
               </div>
             </div>
           ) : selectedTable && !isOpeningModal && !currentActiveOrder ? (
-            <div className="bg-[#141414] p-6 rounded-xl border border-[#2A2A2A] shadow-xs text-center py-10 space-y-3">
-              <p className="text-xs text-gray-400">Esta mesa no registra cuenta activa.</p>
-              <button 
-                onClick={() => setIsOpeningModal(true)}
-                className="bg-[#C5A059] hover:bg-[#D5B069] text-black px-4 py-2 rounded-lg text-xs font-bold cursor-pointer"
-              >
-                Abrir Comanda Ahora
-              </button>
+            <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-2xs space-y-6" id="empty-table-options">
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                <div>
+                  <h3 className="font-bold text-zinc-900 text-base">Mesa {selectedTable.number}</h3>
+                  <p className="text-[10px] text-zinc-400 mt-0.5 font-mono">CAPACIDAD: {selectedTable.capacity} PAX</p>
+                </div>
+                <button 
+                  onClick={() => setSelectedTable(null)}
+                  className="p-1 hover:bg-zinc-100 rounded text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {selectedTable.status === 'Reservada' ? (
+                /* Vista de mesa Reservada */
+                <div className="space-y-5">
+                  <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-200 text-center space-y-2">
+                    <User className="w-8 h-8 text-amber-600 mx-auto" />
+                    <span className="text-xs uppercase tracking-wider font-bold text-amber-800 block">Mesa Reservada</span>
+                    <p className="text-sm font-bold text-zinc-900">{selectedTable.reservationName}</p>
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <button
+                      onClick={() => handleOpenComandaWizard(selectedTable)}
+                      className="w-full text-center bg-[#9C7E46] hover:bg-[#B4965C] text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors cursor-pointer shadow-xs"
+                    >
+                      Iniciar Servicio (Comer)
+                    </button>
+                    <button
+                      onClick={() => {
+                        onUpdateTableStatus(selectedTable.id, 'Libre');
+                        setSelectedTable({ ...selectedTable, status: 'Libre', reservationName: undefined });
+                      }}
+                      className="w-full text-center bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 text-xs font-bold py-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      Liberar Mesa (Cancelar Reserva)
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Vista de mesa Libre */
+                <div className="space-y-6">
+                  {/* Iniciar servicio */}
+                  <div className="space-y-2.5">
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Servicio Inmediato</span>
+                    <button
+                      onClick={() => handleOpenComandaWizard(selectedTable)}
+                      className="w-full text-center bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors cursor-pointer shadow-2xs"
+                    >
+                      Abrir Comanda Ahora
+                    </button>
+                  </div>
+
+                  <div className="border-t border-zinc-150 pt-4 space-y-3">
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Establecer una Reserva</span>
+                    
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={newReservationInput}
+                        onChange={(e) => setNewReservationInput(e.target.value)}
+                        placeholder="Nombre de la reserva (ej: Familia Pérez)..."
+                        className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#9C7E46] focus:border-[#9C7E46] bg-white text-zinc-800 placeholder-zinc-400 font-medium"
+                      />
+                      <button
+                        type="button"
+                        disabled={!newReservationInput.trim()}
+                        onClick={() => {
+                          const name = newReservationInput.trim();
+                          onUpdateTableStatus(selectedTable.id, 'Reservada', name);
+                          setSelectedTable({ ...selectedTable, status: 'Reservada', reservationName: name });
+                          setNewReservationInput('');
+                        }}
+                        className="w-full text-center bg-white hover:bg-amber-50 text-amber-800 hover:text-amber-900 border border-amber-250 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-zinc-400 py-2 rounded-lg text-xs font-bold transition-all disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        Confirmar Reserva 👤
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
-            <div className="bg-[#141414] p-8 rounded-xl border border-[#2A2A2A] shadow-xs text-center text-gray-550 py-20 flex flex-col items-center justify-center gap-3">
-              <ShoppingBag className="w-12 h-12 text-[#C5A059]/40" />
-              <p className="text-sm font-medium text-gray-300">Selecciona una mesa en el plano</p>
-              <p className="text-xs text-gray-500 max-w-[200px]">Haz clic en cualquier mesa disponible en el mapa para ver su comanda, preparar un ticket de venta, cambiar el chef o registrar pagos.</p>
+            <div className="bg-white p-8 rounded-xl border border-zinc-200 shadow-2xs text-center text-zinc-400 py-20 flex flex-col items-center justify-center gap-3">
+              <ShoppingBag className="w-12 h-12 text-zinc-300" />
+              <p className="text-sm font-semibold text-zinc-800">Comandos & Selección</p>
+              <p className="text-xs text-zinc-500 max-w-[200px]">Haz clic en cualquier mesa en el mapa para ver su comanda, pedir la cuenta o procesar el cobro de la venta.</p>
             </div>
           )}
         </div>
@@ -366,19 +455,19 @@ export default function MesasComandas({
 
       {/* MODAL DE APERTURA DE COMANDA */}
       {isOpeningModal && selectedTable && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto backdrop-blur-xs">
-          <div className="bg-[#0D0D0D] rounded-xl shadow-2xl border border-[#2A2A2A] max-w-4xl w-full flex flex-col md:flex-row max-h-[90vh] overflow-hidden" id="billing-modal-wizard">
+        <div className="fixed inset-0 bg-zinc-900/60 flex items-center justify-center z-50 p-4 overflow-y-auto backdrop-blur-xs">
+          <div className="bg-white rounded-xl shadow-2xl border border-zinc-200 max-w-4xl w-full flex flex-col md:flex-row max-h-[90vh] overflow-hidden" id="billing-modal-wizard">
             {/* Sección de Selección de Artículos */}
-            <div className="flex-1 p-6 overflow-y-auto border-b md:border-b-0 md:border-r border-[#2A2A2A] space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
-                <h3 className="font-bold text-white text-lg">Menú • Mesa {selectedTable.number}</h3>
-                <span className="text-xs text-gray-500">Sección comida rápida, tragos y postres</span>
+            <div className="flex-1 p-6 overflow-y-auto border-b md:border-b-0 md:border-r border-zinc-200 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-zinc-150">
+                <h3 className="font-bold text-zinc-900 text-lg">Catálogo • Mesa {selectedTable.number}</h3>
+                <span className="text-xs text-zinc-450">Agregue elementos a la comanda actual</span>
               </div>
 
               {/* Buscador de Menú y Categorías */}
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="relative flex-1">
-                  <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-zinc-400">
                     <Search className="w-4 h-4" />
                   </span>
                   <input
@@ -386,17 +475,17 @@ export default function MesasComandas({
                     value={menuSearch}
                     onChange={(e) => setMenuSearch(e.target.value)}
                     placeholder="Buscar platillo o bebida..."
-                    className="w-full text-xs pl-9 pr-4 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white"
+                    className="w-full text-xs pl-9 pr-4 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 bg-zinc-50/50 text-zinc-905"
                   />
                 </div>
-                <div className="flex border border-[#2A2A2A] rounded-lg overflow-hidden shrink-0 text-xs">
+                <div className="flex border border-zinc-200 rounded-lg overflow-hidden shrink-0 text-xs bg-zinc-50">
                   {['Todos', 'Comidas', 'Bebidas', 'Postres', 'Entradas'].map((cat) => (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => setMenuFilter(cat as any)}
-                      className={`px-3 py-1.5 font-medium border-r border-[#2A2A2A] last:border-0 hover:bg-[#2A2A2A] transition-colors cursor-pointer ${
-                        menuFilter === cat ? 'bg-[#C5A059] text-black hover:bg-[#C5A059]' : 'bg-[#1F1F1F] text-gray-400'
+                      className={`px-3 py-1.5 font-medium border-r border-zinc-200 last:border-0 transition-colors cursor-pointer ${
+                        menuFilter === cat ? 'bg-zinc-900 text-white hover:bg-zinc-800' : 'text-zinc-600 hover:bg-zinc-100'
                       }`}
                     >
                       {cat}
@@ -408,23 +497,23 @@ export default function MesasComandas({
               {/* Lista de Platillos */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[40vh] md:max-h-[55vh] overflow-y-auto pr-1">
                 {filteredMenuItems.length === 0 ? (
-                  <p className="text-xs text-gray-500 text-center py-10 col-span-2">No se encontraron artículos con estos criterios.</p>
+                  <p className="text-xs text-zinc-450 text-center py-10 col-span-2">No se encontraron artículos con estos criterios.</p>
                 ) : (
                   filteredMenuItems.map(item => (
                     <button
                       key={item.id}
                       type="button"
                       onClick={() => addToCart(item)}
-                      className="p-3 bg-[#1F1F1F]/30 border border-[#2A2A2A] hover:border-[#C5A059]/40 hover:bg-[#1F1F1F] rounded-xl text-left flex flex-col justify-between h-24 hover:shadow-xs transition-colors cursor-pointer"
+                      className="p-3.5 bg-zinc-50/20 hover:bg-zinc-50 border border-zinc-200 rounded-xl text-left flex flex-col justify-between h-24 hover:border-zinc-350 hover:shadow-2xs transition-all cursor-pointer"
                     >
                       <div className="space-y-1 w-full">
                         <div className="flex justify-between items-start gap-2">
-                          <span className="font-semibold text-xs text-white line-clamp-1">{item.name}</span>
-                          <span className="font-mono text-xs font-bold text-[#C5A059]">${item.price.toFixed(2)}</span>
+                          <span className="font-semibold text-xs text-zinc-900 line-clamp-1">{item.name}</span>
+                          <span className="font-mono text-xs font-bold text-[#9C7E46]">${item.price.toFixed(2)}</span>
                         </div>
-                        <p className="text-[10px] text-gray-500 line-clamp-2 leading-relaxed">{item.description}</p>
+                        <p className="text-[10px] text-zinc-500 line-clamp-2 leading-relaxed">{item.description}</p>
                       </div>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#141414] text-gray-400 border border-[#2A2A2A] font-medium">
+                      <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded bg-white text-zinc-500 border border-zinc-200">
                         {item.category}
                       </span>
                     </button>
@@ -434,14 +523,14 @@ export default function MesasComandas({
             </div>
 
             {/* Formulario de Comanda y Configuración */}
-            <form onSubmit={handleOpenComanda} className="w-full md:w-[360px] p-6 flex flex-col justify-between max-h-[90vh] overflow-y-auto bg-[#141414] border-l border-[#2A2A2A]">
+            <form onSubmit={handleOpenComanda} className="w-full md:w-[360px] p-6 flex flex-col justify-between max-h-[90vh] overflow-y-auto bg-zinc-50/40 border-l border-zinc-200">
               <div className="space-y-5">
                 <div className="flex items-center justify-between pb-1">
-                  <h3 className="font-bold text-white text-base">Configurar Orden</h3>
+                  <h3 className="font-bold text-zinc-900 text-lg">Servicio</h3>
                   <button 
                     type="button" 
                     onClick={() => setIsOpeningModal(false)}
-                    className="p-1 hover:bg-[#1F1F1F] rounded text-gray-555 hover:text-white cursor-pointer"
+                    className="p-1 hover:bg-zinc-100 rounded text-zinc-400 hover:text-zinc-800 cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -450,10 +539,10 @@ export default function MesasComandas({
                 {/* Mesero */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-semibold text-gray-400 block">Personal: Mesero de Servicio</label>
+                    <label className="text-xs font-semibold text-zinc-500 block">Mesero Asignado</label>
                     {currentUser?.role === 'Mesero' && (
-                      <span className="text-[10px] text-[#C5A059] font-mono font-bold uppercase bg-[#C5A059]/15 px-1.5 py-0.5 rounded border border-[#C5A059]/20">
-                        Identidad fija
+                      <span className="text-[9px] text-[#9C7E46] font-mono font-bold uppercase bg-[#9C7E46]/10 px-1.5 py-0.5 rounded border border-[#9C7E46]/20">
+                        Mesero Fijo
                       </span>
                     )}
                   </div>
@@ -462,88 +551,88 @@ export default function MesasComandas({
                     onChange={(e) => setSelectedWaiterId(e.target.value)}
                     required
                     disabled={currentUser?.role === 'Mesero'}
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden bg-[#1F1F1F] text-white disabled:opacity-80 disabled:cursor-not-allowed"
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden bg-white text-zinc-800 disabled:opacity-80 disabled:cursor-not-allowed"
                   >
                     {waiters.map(w => (
-                      <option key={w.id} value={w.id} className="bg-[#141414] text-white">{w.name}</option>
+                      <option key={w.id} value={w.id} className="bg-white text-zinc-800">{w.name}</option>
                     ))}
                     {waiters.length === 0 && (
-                      <option value="" className="bg-[#141414] text-white">No hay meseros activos</option>
+                      <option value="" className="bg-white text-zinc-800">No hay meseros activos</option>
                     )}
                   </select>
                 </div>
 
                 {/* Chef */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-400 block">Personal: Chef Preparador</label>
+                  <label className="text-xs font-semibold text-zinc-500 block">Chef Encargado</label>
                   <select
                     value={selectedChefId}
                     onChange={(e) => setSelectedChefId(e.target.value)}
                     required
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden bg-[#1F1F1F] text-white"
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden bg-white text-zinc-800"
                   >
                     {chefs.map(c => (
-                      <option key={c.id} value={c.id} className="bg-[#141414] text-white">{c.name}</option>
+                      <option key={c.id} value={c.id} className="bg-white text-zinc-800">{c.name}</option>
                     ))}
                     {chefs.length === 0 && (
-                      <option value="" className="bg-[#141414] text-white">No hay chefs activos</option>
+                      <option value="" className="bg-white text-zinc-800">No hay chefs activos</option>
                     )}
                   </select>
                 </div>
 
                 {/* Cliente Opcional */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-400 block">Asociar Cliente (Opcional)</label>
+                  <label className="text-xs font-semibold text-zinc-500 block">Asociar Cliente (Opcional)</label>
                   <select
                     value={selectedCustomerId}
                     onChange={(e) => setSelectedCustomerId(e.target.value)}
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden bg-[#1F1F1F] text-white"
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden bg-white text-zinc-800"
                   >
-                    <option value="" className="bg-[#141414] text-white">Consumidor Final (Sin Afiliación)</option>
+                    <option value="" className="bg-white text-zinc-800">Consumidor General (Sin Registro)</option>
                     {customers.map(c => (
-                      <option key={c.id} value={c.id} className="bg-[#141414] text-white">{c.name} ({c.points} pts)</option>
+                      <option key={c.id} value={c.id} className="bg-white text-zinc-800">{c.name} ({c.points} pts)</option>
                     ))}
                   </select>
                 </div>
 
                 {/* Nombre de la Reserva / Mesa */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-400 block">Nombre de la Reserva / Cliente (Opcional)</label>
+                  <label className="text-xs font-semibold text-zinc-500 block">Nombre de la Reserva / Cliente (Opcional)</label>
                   <input
                     type="text"
                     value={reservationName}
                     onChange={(e) => setReservationName(e.target.value)}
-                    placeholder="Ej. Familia Pérez, Cumpleaños de Sofía"
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-650"
+                    placeholder="Familia Pérez, Mesa VIP..."
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 focus:border-zinc-400 bg-white text-zinc-805 placeholder-zinc-400"
                   />
                 </div>
 
                 {/* Resumen de Comanda a Abrir */}
-                <div className="space-y-2 border-t border-[#2A2A2A] pt-4 max-h-[180px] overflow-y-auto">
-                  <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">Pedido Actual</span>
+                <div className="space-y-2 border-t border-zinc-200 pt-4 max-h-[180px] overflow-y-auto">
+                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Pedido Actual</span>
                   
                   {cartItems.length === 0 ? (
-                    <p className="text-[11px] text-gray-500 italic">No has agregado platillos todavía. Selecciona en la cuadrícula de menú izquierda.</p>
+                    <p className="text-[11px] text-zinc-450 italic">No has agregado platillos todavía. Haz clic en los platillos del catálogo.</p>
                   ) : (
                     cartItems.map((cItem, index) => (
-                      <div key={index} className="space-y-1 bg-[#1F1F1F] p-2.5 rounded-lg border border-[#2A2A2A] text-xs">
+                      <div key={index} className="space-y-1 bg-white p-2.5 rounded-lg border border-zinc-150 text-xs shadow-3xs">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-200 truncate max-w-[160px]">{cItem.name}</span>
-                          <div className="flex items-center gap-2 text-white">
+                          <span className="font-semibold text-zinc-800 truncate max-w-[160px]">{cItem.name}</span>
+                          <div className="flex items-center gap-1.5 text-zinc-800">
                             <button
                               type="button"
                               onClick={() => updateCartQty(cItem.menuItemId, cItem.quantity - 1)}
-                              className="p-0.5 hover:bg-[#2A2A2A] rounded text-gray-400 hover:text-white cursor-pointer"
+                              className="p-1 hover:bg-zinc-50 rounded text-zinc-500 hover:text-zinc-900 border border-zinc-200 cursor-pointer"
                             >
-                              <Minus className="w-3.5 h-3.5" />
+                              <Minus className="w-3 h-3" />
                             </button>
-                            <span className="font-bold text-[#C5A059]">{cItem.quantity}</span>
+                            <span className="font-bold text-[#9C7E46] px-1">{cItem.quantity}</span>
                             <button
                               type="button"
                               onClick={() => updateCartQty(cItem.menuItemId, cItem.quantity + 1)}
-                              className="p-0.5 hover:bg-[#2A2A2A] rounded text-gray-400 hover:text-white cursor-pointer"
+                              className="p-1 hover:bg-zinc-50 rounded text-zinc-500 hover:text-zinc-900 border border-zinc-200 cursor-pointer"
                             >
-                              <Plus className="w-3.5 h-3.5" />
+                              <Plus className="w-3 h-3" />
                             </button>
                           </div>
                         </div>
@@ -551,8 +640,8 @@ export default function MesasComandas({
                           type="text"
                           value={cItem.notes}
                           onChange={(e) => updateCartNotes(cItem.menuItemId, e.target.value)}
-                          placeholder="Notas (p. ej. sin cebolla...)"
-                          className="w-full text-[10px] text-rose-450 bg-[#0D0D0D] placeholder-gray-600 px-1.5 py-0.5 rounded border border-[#2A2A2A]/40"
+                          placeholder="Notas especiales (término, alérgenos...)"
+                          className="w-full text-[10px] text-zinc-650 bg-zinc-50 placeholder-zinc-400 px-2 py-1 rounded border border-zinc-200"
                         />
                       </div>
                     ))
@@ -561,17 +650,17 @@ export default function MesasComandas({
               </div>
 
               {/* Botón Guardar / Confirmar */}
-              <div className="pt-4 border-t border-[#2A2A2A] space-y-3 mt-4">
-                <div className="flex justify-between font-bold text-xs text-gray-300">
-                  <span>Monto Total Estimado:</span>
-                  <span className="font-mono text-[#C5A059]">${
+              <div className="pt-4 border-t border-zinc-250 space-y-3 mt-4">
+                <div className="flex justify-between font-bold text-xs text-zinc-700">
+                  <span>Monto Estimado (+IVA):</span>
+                  <span className="font-mono text-[#9C7E46]">${
                     (cartItems.reduce((acc, c) => acc + (c.price * c.quantity), 0) * 1.10).toFixed(2)
                   }</span>
                 </div>
                 <button
                   type="submit"
                   disabled={cartItems.length === 0}
-                  className="w-full text-center bg-[#C5A059] hover:bg-[#D5B069] text-black text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full text-center bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
                 >
                   Abrir Comanda e Iniciar Servicio
                 </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, DollarSign, PieChart, TrendingUp, Filter, Calendar, CreditCard, ChevronDown } from 'lucide-react';
+import { Search, DollarSign, PieChart, TrendingUp } from 'lucide-react';
 import { Sale } from '../types';
 
 interface VentasProps {
@@ -40,10 +40,10 @@ export default function Ventas({
   return (
     <div className="space-y-6" id="ventas-view-container">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-[#2A2A2A] gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-zinc-200 gap-4">
         <div>
-          <h1 className="text-2xl font-display font-semibold text-[#C5A059] tracking-tight">Registro de Ventas e Ingresos</h1>
-          <p className="text-sm text-gray-400 mt-1">Consulta los registros contables de facturas cerradas, distribución de cobros y métricas financieras.</p>
+          <h1 className="text-2xl font-display font-semibold text-zinc-900 tracking-tight font-sans">Registro de Ventas e Ingresos</h1>
+          <p className="text-xs text-zinc-500 mt-1">Sabor & Gestión • Historial de transacciones de facturas cerradas y distribución de caja.</p>
         </div>
         {onClearHistory && sales.length > 0 && (
           <button
@@ -52,129 +52,129 @@ export default function Ventas({
                 onClearHistory();
               }
             }}
-            className="text-rose-400 hover:bg-[#1F1F1F] border border-rose-950/40 hover:border-rose-900/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer animate-pulse"
+            className="text-rose-600 hover:bg-rose-50 border border-rose-220 hover:border-rose-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
           >
-            Limpiar Historial
+            Limpiar Historial de Caja
           </button>
         )}
       </div>
 
       {/* Grid de Metricas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-gray-500 uppercase block tracking-wider">Monto Recaudado</span>
-            <span className="text-2xl font-black text-white font-mono">${totalIncome.toFixed(2)}</span>
-            <p className="text-[10px] text-gray-500">Basado en filtros aplicados</p>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase block tracking-wider">Monto Recaudado</span>
+            <span className="text-2xl font-black text-zinc-900 font-mono">${totalIncome.toFixed(2)}</span>
+            <p className="text-[10px] text-zinc-400">Total en base a filtros activos</p>
           </div>
-          <div className="p-3 bg-[#C5A059]/15 text-[#C5A059] rounded-lg border border-[#C5A059]/10">
+          <div className="p-3 bg-zinc-50 text-zinc-700 rounded-lg border border-zinc-150">
             <DollarSign className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-gray-500 uppercase block tracking-wider">Transacciones</span>
-            <span className="text-2xl font-black text-white font-mono">{totalCount} u</span>
-            <p className="text-[10px] text-gray-500">Tickets cerrados con factura</p>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase block tracking-wider">Transacciones</span>
+            <span className="text-2xl font-black text-zinc-900 font-mono">{totalCount} u</span>
+            <p className="text-[10px] text-zinc-400">Tickets cerrados con factura de pago</p>
           </div>
-          <div className="p-3 bg-purple-955/20 text-purple-400 rounded-lg border border-purple-900/10">
+          <div className="p-3 bg-zinc-50 text-zinc-700 rounded-lg border border-zinc-150">
             <TrendingUp className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-gray-500 uppercase block tracking-wider">Ticket Promedio</span>
-            <span className="text-2xl font-black text-white font-mono">${averageTicket.toFixed(2)}</span>
-            <p className="text-[10px] text-gray-500">Gasto medio por mesa cobrada</p>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase block tracking-wider">Ticket Promedio</span>
+            <span className="text-2xl font-black text-zinc-900 font-mono">${averageTicket.toFixed(2)}</span>
+            <p className="text-[10px] text-zinc-400">Uso medio monetario por mesa comensal</p>
           </div>
-          <div className="p-3 bg-blue-955/20 text-blue-400 rounded-lg border border-blue-900/10">
+          <div className="p-3 bg-zinc-50 text-zinc-700 rounded-lg border border-zinc-150">
             <PieChart className="w-6 h-6" />
           </div>
         </div>
       </div>
 
       {/* Distribucion de Métodos de Pago */}
-      <div className="bg-[#141414] p-6 rounded-xl border border-[#2A2A2A] shadow-xs grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-1 space-y-2">
-          <h3 className="font-semibold text-sm text-white">Distribución de Métodos de Pago</h3>
-          <p className="text-xs text-gray-400">Mapeo de la preferencia de cobro histórico.</p>
+      <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-2xs grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-1 space-y-2 select-none">
+          <h3 className="font-semibold text-sm text-zinc-905">Distribución de Canales</h3>
+          <p className="text-xs text-zinc-400">Distribución porcentual por método de pago.</p>
           
           <div className="pt-3 space-y-2.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="flex items-center gap-1.5 font-medium"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Efectivo</span>
-              <span className="font-mono text-gray-300 font-bold">${cashSales.toFixed(2)} ({cashPct.toFixed(0)}%)</span>
+              <span className="flex items-center gap-1.5 font-bold text-zinc-600"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Efectivo</span>
+              <span className="font-mono text-zinc-800 font-bold">${cashSales.toFixed(2)} ({cashPct.toFixed(0)}%)</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-              <span className="flex items-center gap-1.5 font-medium"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>Tarjeta</span>
-              <span className="font-mono text-gray-300 font-bold">${cardSales.toFixed(2)} ({cardPct.toFixed(0)}%)</span>
+              <span className="flex items-center gap-1.5 font-bold text-zinc-600"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>Tarjeta</span>
+              <span className="font-mono text-zinc-800 font-bold">${cardSales.toFixed(2)} ({cardPct.toFixed(0)}%)</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-              <span className="flex items-center gap-1.5 font-medium"><span className="w-2.5 h-2.5 rounded-full bg-[#C5A059]"></span>Transferencia</span>
-              <span className="font-mono text-gray-300 font-bold">${transferSales.toFixed(2)} ({transferPct.toFixed(0)}%)</span>
+              <span className="flex items-center gap-1.5 font-bold text-zinc-600"><span className="w-2.5 h-2.5 rounded-full bg-[#9C7E46]"></span>Transferencia</span>
+              <span className="font-mono text-[#9C7E46] font-bold">${transferSales.toFixed(2)} ({transferPct.toFixed(0)}%)</span>
             </div>
           </div>
         </div>
 
         {/* Canales Progreso visual bento boxes */}
-        <div className="md:col-span-2 flex flex-col justify-center space-y-4">
+        <div className="md:col-span-2 flex flex-col justify-center space-y-4 select-none">
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-semibold text-gray-400">
+            <div className="flex justify-between text-xs font-bold text-zinc-500">
               <span>Efectivo</span>
-              <span>{cashPct.toFixed(1)}%</span>
+              <span className="font-mono font-bold">{cashPct.toFixed(1)}%</span>
             </div>
-            <div className="w-full h-3 bg-[#1F1F1F] rounded-full overflow-hidden">
+            <div className="w-full h-2 rounded-full overflow-hidden bg-zinc-100">
               <div style={{ width: `${cashPct || 0}%` }} className="bg-emerald-500 h-full rounded-full transition-all duration-500"></div>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-semibold text-gray-400">
+            <div className="flex justify-between text-xs font-bold text-zinc-500">
               <span>Tarjeta</span>
-              <span>{cardPct.toFixed(1)}%</span>
+              <span className="font-mono font-bold">{cardPct.toFixed(1)}%</span>
             </div>
-            <div className="w-full h-3 bg-[#1F1F1F] rounded-full overflow-hidden">
+            <div className="w-full h-2 rounded-full overflow-hidden bg-zinc-100">
               <div style={{ width: `${cardPct || 0}%` }} className="bg-blue-500 h-full rounded-full transition-all duration-500"></div>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-semibold text-gray-400">
+            <div className="flex justify-between text-xs font-bold text-zinc-500">
               <span>Transferencia</span>
-              <span>{transferPct.toFixed(1)}%</span>
+              <span className="font-mono font-bold">{transferPct.toFixed(1)}%</span>
             </div>
-            <div className="w-full h-3 bg-[#1F1F1F] rounded-full overflow-hidden">
-              <div style={{ width: `${transferPct || 0}%` }} className="bg-[#C5A059] h-full rounded-full transition-all duration-500"></div>
+            <div className="w-full h-2 rounded-full overflow-hidden bg-zinc-100">
+              <div style={{ width: `${transferPct || 0}%` }} className="bg-[#9C7E46] h-full rounded-full transition-all duration-500"></div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Control Filtros y Listado */}
-      <div className="bg-[#141414] rounded-xl border border-[#2A2A2A] shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
         {/* Barra de busqueda */}
-        <div className="p-4 bg-[#1F1F1F]/40 border-b border-[#2A2A2A] flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div className="p-4 bg-zinc-50/60 border-b border-zinc-200 flex flex-col sm:flex-row gap-3 items-center justify-between">
           <div className="relative flex-1 w-full">
-            <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+            <span className="absolute inset-y-0 left-3 flex items-center text-zinc-400">
               <Search className="w-4 h-4" />
             </span>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por número de mesa o ID de transacción..."
-              className="w-full text-xs pl-9 pr-4 py-2 border border-[#2A2A2A]/80 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500 shadow-xs"
+              placeholder="Buscar por número de mesa o código de transacción..."
+              className="w-full text-xs pl-9 pr-4 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-909 placeholder-zinc-400"
             />
           </div>
 
-          <div className="flex items-center gap-1 border border-[#2A2A2A] rounded-lg overflow-hidden shrink-0 text-xs shadow-xs bg-[#1F1F1F] p-0.5">
+          <div className="flex items-center gap-1 border border-zinc-200 rounded-lg overflow-hidden shrink-0 text-xs bg-zinc-100/60 p-0.5">
             {(['Todos', 'Efectivo', 'Tarjeta', 'Transferencia'] as any[]).map(met => (
               <button
                 key={met}
                 onClick={() => setPaymentFilter(met)}
-                className={`px-3 py-1.5 font-semibold rounded-md transition-all cursor-pointer ${
-                  paymentFilter === met ? 'bg-[#C5A059] text-black font-bold' : 'text-gray-400 hover:text-white'
+                className={`px-3 py-1.5 font-bold rounded-md transition-all cursor-pointer ${
+                  paymentFilter === met ? 'bg-zinc-900 text-white shadow-3xs' : 'text-zinc-500 hover:text-zinc-950'
                 }`}
               >
                 {met === 'Todos' ? 'Todos' : met}
@@ -185,33 +185,33 @@ export default function Ventas({
 
         {/* Grid Tabla */}
         <div className="overflow-x-auto text-xs">
-          <table className="w-full border-collapse text-left text-gray-400">
-            <thead className="bg-[#1F1F1F] text-gray-400 font-bold uppercase border-b border-[#2A2A2A]">
+          <table className="w-full border-collapse text-left text-zinc-500">
+            <thead className="bg-zinc-50 text-zinc-650 font-bold uppercase border-b border-zinc-200 select-none">
               <tr>
-                <th className="p-4 font-mono select-none">ID Transacción</th>
-                <th className="p-4 select-none">Mesa</th>
-                <th className="p-4 select-none">Fecha & Hora</th>
-                <th className="p-4 select-none">Método de Pago</th>
-                <th className="p-4 text-right select-none">Monto Total</th>
+                <th className="p-4 font-mono">ID Transacción</th>
+                <th className="p-4">Mesa</th>
+                <th className="p-4">Fecha & Hora</th>
+                <th className="p-4">Método de Pago</th>
+                <th className="p-4 text-right">Monto Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2A2A2A]/40">
+            <tbody className="divide-y divide-zinc-150">
               {filteredSales.length === 0 ? (
                 <tr>
-                   <td colSpan={5} className="p-8 text-center text-gray-550">
-                    No se registran ventas para este filtro de búsqueda.
+                   <td colSpan={5} className="p-8 text-center text-zinc-400">
+                    No se registran ventas u operaciones bajo estas condiciones.
                   </td>
                 </tr>
               ) : (
                 filteredSales.map((sale) => (
-                  <tr key={sale.id} className="hover:bg-[#1F1F1F]/40 transition-colors">
-                    <td className="p-4 font-mono font-bold text-[#C5A059]">
+                  <tr key={sale.id} className="hover:bg-zinc-50/40 transition-colors">
+                    <td className="p-4 font-mono font-bold text-[#9C7E46]">
                       #{sale.id.toUpperCase().replace('INV_', '')}
                     </td>
-                    <td className="p-4 font-bold text-white">
+                    <td className="p-4 font-bold text-zinc-900">
                       Mesa {sale.tableNumber}
                     </td>
-                    <td className="p-4 text-gray-300">
+                    <td className="p-4 text-zinc-550">
                       {new Date(sale.date).toLocaleDateString('es-ES', {
                         day: '2-digit',
                         month: '2-digit',
@@ -222,15 +222,15 @@ export default function Ventas({
                       })}
                     </td>
                     <td className="p-4">
-                      <span className={`px-2 py-0.5 rounded-md font-semibold border text-[10px] ${
-                        sale.paymentMethod === 'Efectivo' ? 'bg-emerald-955/20 text-emerald-400 border-emerald-900/40' :
-                        sale.paymentMethod === 'Tarjeta' ? 'bg-blue-955/20 text-blue-300 border-blue-900/40' :
-                        'bg-[#C5A059]/15 text-[#C5A564] border-[#C5A059]/35'
+                      <span className={`px-2 py-0.5 rounded-md font-bold border text-[10px] ${
+                        sale.paymentMethod === 'Efectivo' ? 'bg-emerald-50 text-emerald-800 border-emerald-150' :
+                        sale.paymentMethod === 'Tarjeta' ? 'bg-blue-50 text-blue-800 border-blue-150' :
+                        'bg-[#9C7E46]/10 text-[#9C7E46] border-[#9C7E46]/15'
                       }`}>
                         {sale.paymentMethod}
                       </span>
                     </td>
-                    <td className="p-4 text-right font-black font-mono text-white text-sm">
+                    <td className="p-4 text-right font-bold font-mono text-[#9C7E46] text-sm">
                       ${sale.total.toFixed(2)}
                     </td>
                   </tr>

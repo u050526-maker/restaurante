@@ -241,10 +241,17 @@ export default function App() {
     }));
   };
 
-  const handleUpdateTableStatus = (tableId: string, status: Table['status']) => {
-    setTables(prev => prev.map(t => 
-      t.id === tableId ? { ...t, status } : t
-    ));
+  const handleUpdateTableStatus = (tableId: string, status: Table['status'], reservationName?: string) => {
+    setTables(prev => prev.map(t => {
+      if (t.id === tableId) {
+        return {
+          ...t,
+          status,
+          reservationName: status === 'Libre' ? undefined : (reservationName !== undefined ? reservationName : t.reservationName)
+        };
+      }
+      return t;
+    }));
   };
 
   const deductInventoryForOrder = (orderItems: OrderDetail[]) => {
@@ -402,41 +409,41 @@ export default function App() {
     : menuOptions;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex flex-col md:flex-row font-sans text-[#E0E0E0]">
+    <div className="min-h-screen bg-[#FAF9F6] flex flex-col md:flex-row font-sans text-zinc-850">
       
       {/* Boton de menu movil */}
-      <div className="md:hidden bg-[#0D0D0D] px-4 py-3 flex items-center justify-between border-b border-[#2A2A2A] sticky top-0 z-40">
+      <div className="md:hidden bg-white px-4 py-3 flex items-center justify-between border-b border-zinc-200 sticky top-0 z-40">
         <div className="flex items-center gap-2">
-          <Store className="w-5 h-5 text-[#C5A059]" />
-          <span className="font-display font-bold text-[#C5A059] tracking-tighter text-lg">ESTELAR</span>
-          <span className="text-xs font-light tracking-widest text-[#666]">MANAGEMENT</span>
+          <Store className="w-5 h-5 text-[#9C7E46]" />
+          <span className="font-display font-bold text-[#9C7E46] tracking-tighter text-lg">ESTELAR</span>
+          <span className="text-xs font-light tracking-widest text-[#888]">MANAGEMENT</span>
         </div>
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-1.5 hover:bg-[#1F1F1F] rounded text-gray-400 hover:text-[#C5A059]"
+          className="p-1.5 hover:bg-zinc-50 rounded text-zinc-500 hover:text-[#9C7E46]"
         >
           {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
       {/* Sidebar de navegación */}
-      <aside className={`w-[260px] bg-[#141414] border-r border-[#2A2A2A] flex flex-col justify-between shrink-0 sticky top-0 h-screen z-30 transition-transform md:translate-x-0 ${
-        isSidebarOpen ? 'translate-x-0 fixed inset-y-0 left-0 bg-[#141414]' : '-translate-x-full hidden md:flex'
+      <aside className={`w-[260px] bg-white border-r border-zinc-200 flex flex-col justify-between shrink-0 sticky top-0 h-screen z-30 transition-transform md:translate-x-0 ${
+        isSidebarOpen ? 'translate-x-0 fixed inset-y-0 left-0 bg-white' : '-translate-x-full hidden md:flex'
       }`}>
         <div className="py-6 flex-1 flex flex-col h-full overflow-y-auto">
           {/* Logo */}
-          <div className="px-6 pb-6 border-b border-[#2A2A2A] flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-[#1F1F1F] border border-[#2A2A2A] flex items-center justify-center text-[#C5A059]">
-              <Store className="w-4 h-4 text-[#C5A059]" />
+          <div className="px-6 pb-6 border-b border-zinc-150 flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-zinc-50 border border-zinc-200 flex items-center justify-center text-[#9C7E46]">
+              <Store className="w-4 h-4 text-[#9C7E46]" />
             </div>
             <div>
-              <span className="font-display font-black text-[#C5A059] tracking-tighter text-lg block leading-none">ESTELAR</span>
-              <span className="text-[9px] text-gray-550 font-light block tracking-widest mt-1">MANAGEMENT</span>
+              <span className="font-display font-black text-[#9C7E46] tracking-tighter text-lg block leading-none">ESTELAR</span>
+              <span className="text-[9px] text-zinc-400 font-light block tracking-widest mt-1">MANAGEMENT</span>
             </div>
           </div>
 
           {/* Menú List (Filtrado según rol) */}
-          <nav className="px-3 pt-5 space-y-1.5 flex-1-deleted">
+          <nav className="px-3 pt-5 space-y-1.5">
             {filteredMenuOptions.map((option) => {
               const IconComp = option.icon;
               const isActive = activeTab === option.id;
@@ -449,11 +456,11 @@ export default function App() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#1F1F1F] text-[#C5A059] border border-[#C5A059]/20 shadow-sm shadow-[#C5A059]/5'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-[#1F1F1F]/40'
+                      ? 'bg-zinc-100 text-[#9C7E46] border border-zinc-200 shadow-sm'
+                      : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50/50'
                   }`}
                 >
-                  <IconComp className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-[#C5A059]' : 'text-gray-500'}`} />
+                  <IconComp className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-[#9C7E46]' : 'text-zinc-400'}`} />
                   <span>{option.label}</span>
                 </button>
               );
@@ -462,15 +469,15 @@ export default function App() {
         </div>
 
         {/* User Info / Branding Footer con botón de Cerrar Sesión */}
-        <div className="p-4 border-t border-[#2A2A2A] text-xs bg-[#0D0D0D] flex flex-col gap-3">
+        <div className="p-4 border-t border-zinc-200 text-xs bg-zinc-50 flex flex-col gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-[#C5A059] text-black rounded-full flex items-center justify-center font-extrabold text-xs">
+            <div className="w-8 h-8 bg-[#9C7E46] text-white rounded-full flex items-center justify-center font-extrabold text-xs shadow-xs">
               {currentUser.name ? currentUser.name.substring(0, 2).toUpperCase() : 'US'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-200 truncate leading-none">{currentUser.name}</p>
+              <p className="font-semibold text-zinc-900 truncate leading-none">{currentUser.name}</p>
               <div className="flex items-center mt-1">
-                <span className="text-[9px] text-[#C5A059] font-mono tracking-wider uppercase bg-[#C5A059]/10 px-1.5 py-0.5 rounded border border-[#C5A059]/20 font-bold block">
+                <span className="text-[9px] text-[#9C7E46] font-mono tracking-wider uppercase bg-[#9C7E46]/10 px-1.5 py-0.5 rounded border border-[#9C7E46]/20 font-bold block">
                   {currentUser.role}
                 </span>
               </div>
@@ -479,9 +486,9 @@ export default function App() {
           
           <button
             onClick={() => setCurrentUser(null)}
-            className="w-full bg-[#1A1A1A] hover:bg-rose-955/20 hover:text-rose-450 border border-[#2A2A2A] text-gray-400 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full bg-white hover:bg-rose-50 hover:text-rose-600 border border-zinc-200 text-zinc-650 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs"
           >
-            <LogOut className="w-3.5 h-3.5 text-gray-500 hover:text-rose-400 shrink-0" />
+            <LogOut className="w-3.5 h-3.5 text-zinc-400 hover:text-rose-500 shrink-0" />
             Cerrar Sesión (Salir)
           </button>
         </div>

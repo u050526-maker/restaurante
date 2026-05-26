@@ -6,17 +6,17 @@
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-dark-bg: #0A0A0A;
-  --color-dark-card: #141414;
-  --color-dark-hover: #1F1F1F;
-  --color-dark-border: #2A2A2A;
-  --color-gold: #C5A059;
-  --color-gold-hover: #D5B069;
+  --color-dark-bg: #FAFAFA;
+  --color-dark-card: #FFFFFF;
+  --color-dark-hover: #F4F4F5;
+  --color-dark-border: #E4E4E7;
+  --color-gold: #9C7E46; /* A more elegant, deeper luxury champagne gold that works perfectly on white */
+  --color-gold-hover: #B4965C;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--color-dark-bg);
-  color: #E0E0E0;
+  color: #18181B;
 }
 

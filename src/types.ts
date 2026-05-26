@@ -50,7 +50,7 @@ export interface Customer {
   createdAt: string;
 }
 
-export type TableStatus = 'Libre' | 'Ocupada' | 'Buscando Cuenta';
+export type TableStatus = 'Libre' | 'Ocupada' | 'Buscando Cuenta' | 'Reservada';
 
 export interface Table {
   id: string;

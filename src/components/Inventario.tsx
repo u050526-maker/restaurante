@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusCircle, Search, AlertTriangle, Filter, ClipboardList, RefreshCw, Trash2, ArrowUpRight } from 'lucide-react';
+import { PlusCircle, Search, AlertTriangle, ClipboardList, RefreshCw, Trash2, ArrowUpRight } from 'lucide-react';
 import { InventoryItem } from '../types';
 
 interface InventarioProps {
@@ -76,14 +76,14 @@ export default function Inventario({
   return (
     <div className="space-y-6" id="inventario-view-container">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-[#2A2A2A] gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-zinc-200 gap-4">
         <div>
-          <h1 className="text-2xl font-display font-semibold text-[#C5A059] tracking-tight">Inventario de Almacén</h1>
-          <p className="text-sm text-gray-400 mt-1">Controla las existencias, costos unitarios, materias primas y alertas de abastecimiento de cocina.</p>
+          <h1 className="text-2xl font-display font-semibold text-zinc-905 tracking-tight">Inventario de Almacén</h1>
+          <p className="text-xs text-zinc-500 mt-1">Sabor & Gestión • Gestión física de stock, coste unitario y compras de almacén y cocina.</p>
         </div>
         <button
           onClick={() => setIsAddingNew(true)}
-          className="bg-[#C5A059] hover:bg-[#D5B069] text-black px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer shrink-0"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-2xs transition-colors cursor-pointer shrink-0"
         >
           <PlusCircle className="w-4 h-4" />
           Nuevo Insumo
@@ -92,39 +92,39 @@ export default function Inventario({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs flex items-center gap-4">
-          <div className="p-3 bg-blue-955/20 text-blue-400 rounded-lg border border-blue-900/10">
+        <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs flex items-center gap-4">
+          <div className="p-3 bg-zinc-50 text-zinc-700 rounded-lg border border-zinc-150">
             <ClipboardList className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block">Insumos Registrados</span>
-            <span className="text-xl font-bold text-white font-mono">{inventory.length} artículos</span>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Insumos Registrados</span>
+            <span className="text-xl font-extrabold text-zinc-900 font-mono">{inventory.length} artículos</span>
           </div>
         </div>
 
-        <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs flex items-center gap-4">
-          <div className="p-3 bg-[#C5A059]/15 text-[#C5A059] rounded-lg border border-[#C5A059]/10">
+        <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs flex items-center gap-4">
+          <div className="p-3 bg-[#9C7E46]/10 text-[#9C7E46] rounded-lg border border-[#9C7E46]/15">
             <ArrowUpRight className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block">Valor Total de Activo</span>
-            <span className="text-xl font-bold text-white font-mono">${totalAssetsValue.toFixed(2)}</span>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Valor Estimado Activo</span>
+            <span className="text-xl font-extrabold text-[#9C7E46] font-mono">${totalAssetsValue.toFixed(2)}</span>
           </div>
         </div>
 
-        <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs flex items-center gap-4">
-          <div className={`p-3 rounded-lg ${criticalItemsCount > 0 ? 'bg-rose-955/20 text-rose-400 animate-pulse border border-rose-900/40' : 'bg-[#141414] text-gray-600 border border-[#2A2A2A]'}`}>
+        <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs flex items-center gap-4">
+          <div className={`p-3 rounded-lg border ${criticalItemsCount > 0 ? 'bg-rose-50 text-rose-600 border-rose-150 animate-pulse' : 'bg-zinc-50 text-zinc-400 border-zinc-150'}`}>
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block">Existencia Crítica</span>
-            <span className={`text-xl font-bold font-mono ${criticalItemsCount > 0 ? 'text-rose-450' : 'text-gray-400'}`}>{criticalItemsCount} alertas</span>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Existencias Críticas</span>
+            <span className={`text-xl font-extrabold font-mono ${criticalItemsCount > 0 ? 'text-rose-650' : 'text-zinc-500'}`}>{criticalItemsCount} alertas</span>
           </div>
         </div>
       </div>
 
       {/* Area Filtros */}
-      <div className="bg-[#141414] p-5 rounded-xl border border-[#2A2A2A] shadow-xs space-y-4">
+      <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {/* Categorias Tabs scrolling panel */}
           <div className="flex flex-wrap gap-1.5 text-xs">
@@ -132,10 +132,10 @@ export default function Inventario({
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat as any)}
-                className={`px-3 py-1.5 font-semibold rounded-lg border transition-all cursor-pointer ${
+                className={`px-3 py-1.5 font-bold rounded-lg border transition-all cursor-pointer ${
                   activeCategory === cat
-                    ? 'bg-[#C5A059] text-black border-transparent shadow-xs font-bold'
-                    : 'bg-[#1F1F1F] text-gray-400 border-[#2A2A2A] hover:bg-[#2A2A2A]'
+                    ? 'bg-zinc-900 text-white border-transparent shadow-xs'
+                    : 'bg-white text-zinc-650 border-zinc-200 hover:bg-zinc-50'
                 }`}
               >
                 {cat}
@@ -144,96 +144,96 @@ export default function Inventario({
           </div>
 
           {/* Low stock check */}
-          <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-300 select-none">
+          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-700 select-none">
             <input
               type="checkbox"
               checked={showLowStockOnly}
               onChange={(e) => setShowLowStockOnly(e.target.checked)}
-              className="rounded border-[#2A2A2A] text-[#C5A059] focus:ring-[#C5A059] bg-[#1F1F1F] w-4 h-4"
+              className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-850 w-4 h-4"
             />
-            <span className="text-rose-400 bg-rose-955/25 hover:bg-rose-955/35 border border-rose-900/40 px-2 py-1 rounded transition-colors">Stock Bajo Crítico ⚠️</span>
+            <span className="text-rose-700 bg-rose-50 border border-rose-150 px-2 py-1.5 rounded transition-colors uppercase tracking-wider font-bold text-[10px]">Ver Solamente Stock Bajo ⚠️</span>
           </label>
         </div>
 
         {/* Buscador */}
         <div className="relative">
-          <span className="absolute inset-y-0 left-3 flex items-center text-gray-550">
+          <span className="absolute inset-y-0 left-3 flex items-center text-zinc-400">
             <Search className="w-4 h-4" />
           </span>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar insumo por nombre o categoría..."
-            className="w-full text-xs pl-9 pr-4 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500"
+            placeholder="Buscar insumo por nombre o categoría de almacén..."
+            className="w-full text-xs pl-9 pr-4 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-zinc-50/40 text-zinc-900"
           />
         </div>
       </div>
 
       {/* Tabla del inventario */}
-      <div className="bg-[#141414] rounded-xl border border-[#2A2A2A] shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-xs text-left text-gray-400">
-            <thead className="bg-[#1F1F1F] text-gray-400 font-bold uppercase border-b border-[#2A2A2A]">
+          <table className="w-full border-collapse text-xs text-left text-zinc-500">
+            <thead className="bg-zinc-50 text-zinc-600 font-bold uppercase border-b border-zinc-200 select-none">
               <tr>
-                <th className="p-4 select-none">Insumo</th>
-                <th className="p-4 select-none">Categoría</th>
-                <th className="p-4 select-none">Cantidad Actual</th>
-                <th className="p-4 text-center select-none">Nivel Mínimo</th>
-                <th className="p-4 select-none">Costo Unitario</th>
-                <th className="p-4 select-none">Monto Estimado</th>
-                <th className="p-4 text-center select-none">Acciones Rápidas de Abastecimiento</th>
+                <th className="p-4">Insumo</th>
+                <th className="p-4">Categoría</th>
+                <th className="p-4">Stock Actual</th>
+                <th className="p-4 text-center">Mínimo Alerta</th>
+                <th className="p-4">Costo Compra</th>
+                <th className="p-4">Monto Estimado</th>
+                <th className="p-4 text-center">Acciones de Reabastecimiento</th>
                 <th className="p-4"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2A2A2A]/40">
+            <tbody className="divide-y divide-zinc-150">
               {filteredInventory.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-gray-550">
-                    No hay insumos registrados que coincidan con los filtros.
+                  <td colSpan={8} className="p-8 text-center text-zinc-400">
+                    No hay existencias de mercancías listadas bajo tales términos.
                   </td>
                 </tr>
               ) : (
                 filteredInventory.map((item) => {
                   const isLow = item.quantity <= item.minLimit;
                   return (
-                    <tr key={item.id} className={`transition-colors duration-150 ${isLow ? 'bg-rose-955/15 hover:bg-rose-955/25' : 'hover:bg-[#1F1F1F]/40'}`}>
-                      <td className="p-4 font-bold text-white">
+                    <tr key={item.id} className={`transition-colors duration-150 ${isLow ? 'bg-rose-50/20 hover:bg-rose-50/40' : 'hover:bg-zinc-50/50'}`}>
+                      <td className="p-4 font-bold text-zinc-900">
                         <div className="flex items-center gap-2">
                           <span>{item.name}</span>
                           {isLow && (
-                            <span className="px-1.5 py-0.5 rounded bg-rose-955 text-[9px] font-black text-rose-300 uppercase border border-rose-900/30 animate-pulse">Bajo</span>
+                            <span className="px-1.5 py-0.5 rounded bg-rose-50 text-[9px] font-black text-rose-700 uppercase border border-rose-150 animate-pulse">Crítico</span>
                           )}
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="px-2 py-0.5 rounded bg-[#1F1F1F] text-[10px] text-gray-400 border border-[#2A2A2A]/40 font-mono">
+                        <span className="px-2 py-0.5 rounded bg-zinc-50 text-[10px] text-zinc-500 border border-zinc-200 font-mono">
                           {item.category}
                         </span>
                       </td>
-                      <td className={`p-4 font-mono font-bold ${isLow ? 'text-rose-450' : 'text-gray-200'}`}>
-                        {item.quantity.toFixed(1)} <span className="text-[10px] text-gray-500 font-normal">{item.unit}</span>
+                      <td className={`p-4 font-mono font-bold ${isLow ? 'text-rose-650' : 'text-zinc-800'}`}>
+                        {item.quantity.toFixed(1)} <span className="text-[10px] text-zinc-400 font-normal">{item.unit}</span>
                       </td>
-                      <td className="p-4 text-center font-semibold text-gray-300 font-mono">
+                      <td className="p-4 text-center font-bold text-zinc-500 font-mono">
                         {item.minLimit} {item.unit}
                       </td>
-                      <td className="p-4 font-mono font-medium text-gray-300">
+                      <td className="p-4 font-mono font-medium text-zinc-600">
                         ${item.costPrice.toFixed(2)}
                       </td>
-                      <td className="p-4 font-mono font-bold text-white">
+                      <td className="p-4 font-mono font-bold text-zinc-905">
                         ${(item.quantity * item.costPrice).toFixed(2)}
                       </td>
                       <td className="p-4 text-center">
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => handleQuickRestock(item.id, item.quantity, 5)}
-                            className="bg-[#1F1F1F] hover:bg-[#2A2A2A] text-white hover:text-[#C5A059] border border-[#2A2A2A] hover:border-[#C5A059]/40 font-bold px-2.5 py-1 rounded transition-colors text-[10px] cursor-pointer"
+                            className="bg-white hover:bg-zinc-50 hover:text-[#9C7E46] text-zinc-700 border border-zinc-200 font-bold px-2.5 py-1 rounded-md transition-colors text-[10px] cursor-pointer shadow-3xs"
                           >
                             +5 {item.unit}
                           </button>
                           <button
                             onClick={() => handleQuickRestock(item.id, item.quantity, 25)}
-                            className="bg-[#C5A059]/15 hover:bg-[#C5A059]/30 text-[#C5A059] hover:text-white border border-[#C5A059]/20 font-bold px-2.5 py-1 rounded transition-colors text-[10px] cursor-pointer"
+                            className="bg-[#9C7E46]/10 hover:bg-[#9C7E46]/15 hover:text-[#9C7E46] text-[#9C7E46] font-bold px-2.5 py-1 rounded-md transition-colors text-[10px] cursor-pointer shadow-3xs border border-[#9C7E46]/20"
                           >
                             +25 {item.unit}
                           </button>
@@ -244,9 +244,9 @@ export default function Inventario({
                                 handleQuickRestock(item.id, item.quantity, extra);
                               }
                             }}
-                            className="bg-[#141414] hover:bg-[#1F1F1F] text-gray-300 hover:text-white border border-[#2A2A2A] font-bold px-2.5 py-1 rounded transition-colors text-[10px] cursor-pointer"
+                            className="bg-zinc-50 hover:bg-zinc-100 text-zinc-700 font-bold px-2.5 py-1 rounded-md border border-zinc-205 transition-colors text-[10px] cursor-pointer shadow-3xs"
                           >
-                            Personalizado
+                            Añadir
                           </button>
                         </div>
                       </td>
@@ -257,7 +257,7 @@ export default function Inventario({
                               onDeleteInventoryItem(item.id);
                             }
                           }}
-                          className="p-1.5 hover:bg-rose-955/20 rounded text-gray-500 hover:text-rose-400 transition-colors cursor-pointer"
+                          className="p-1.5 hover:bg-rose-50 rounded text-zinc-400 hover:text-rose-600 transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -273,14 +273,14 @@ export default function Inventario({
 
       {/* FORMULARIO VENTANA MODAL PARA AGREGAR NUEVO INSUMO */}
       {isAddingNew && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-xs">
-          <div className="bg-[#0D0D0D] rounded-xl shadow-2xl border border-[#2A2A2A] max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
-              <h3 className="font-bold text-white text-base">Crear Nuevo Insumo / Bebida</h3>
+        <div className="fixed inset-0 bg-zinc-900/60 flex items-center justify-center z-50 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-xl shadow-2xl border border-zinc-200 max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-150">
+              <h3 className="font-bold text-zinc-900 text-base">Registrar Nuevo Item</h3>
               <button 
                 type="button" 
                 onClick={() => setIsAddingNew(false)}
-                className="p-1 hover:bg-[#1F1F1F] rounded text-gray-505 hover:text-white cursor-pointer"
+                className="p-1 hover:bg-zinc-100 rounded text-zinc-400 hover:text-zinc-800 cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4 rotate-45" />
               </button>
@@ -289,38 +289,38 @@ export default function Inventario({
             <form onSubmit={handleCreateItem} className="space-y-4">
               {/* Nombre */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-400 block">Nombre del Artículo *</label>
+                <label className="text-xs font-semibold text-zinc-500 block">Nombre del Artículo *</label>
                 <input
                   type="text"
                   required
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Ej: Lomo de cerdo, Coca-Cola Lata, etc."
-                  className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500"
+                  className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-900 placeholder-zinc-400"
                 />
               </div>
 
               {/* Categoría */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-400 block">Categoría *</label>
+                <label className="text-xs font-semibold text-zinc-500 block">Categoría *</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value as any)}
-                  className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden bg-[#1F1F1F] text-white"
+                  className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden bg-white text-zinc-800"
                 >
-                  <option value="Ingredientes" className="bg-[#141414]">Ingredientes</option>
-                  <option value="Bebidas" className="bg-[#141414]">Bebidas</option>
-                  <option value="Carnes" className="bg-[#141414]">Carnes</option>
-                  <option value="Verduras" className="bg-[#141414]">Verduras</option>
-                  <option value="Abarrotes" className="bg-[#141414]">Abarrotes</option>
-                  <option value="Desechables" className="bg-[#141414]">Desechables</option>
+                  <option value="Ingredientes" className="bg-white">Ingredientes</option>
+                  <option value="Bebidas" className="bg-white">Bebidas</option>
+                  <option value="Carnes" className="bg-white">Carnes</option>
+                  <option value="Verduras" className="bg-white">Verduras</option>
+                  <option value="Abarrotes" className="bg-white">Abarrotes</option>
+                  <option value="Desechables" className="bg-white">Desechables</option>
                 </select>
               </div>
 
               {/* Fila Cantidad, Limit, Unit */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-gray-400 block">Cant. Inicial *</label>
+                  <label className="text-[11px] font-semibold text-zinc-500 block">Cant. Inicial *</label>
                   <input
                     type="number"
                     required
@@ -329,11 +329,11 @@ export default function Inventario({
                     value={newQuantity}
                     onChange={(e) => setNewQuantity(e.target.value)}
                     placeholder="10"
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500 font-mono"
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-900 placeholder-zinc-400 font-mono"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-gray-400 block">Mín. Alerta *</label>
+                  <label className="text-[11px] font-semibold text-zinc-500 block">Reserva Alerta *</label>
                   <input
                     type="number"
                     required
@@ -342,25 +342,25 @@ export default function Inventario({
                     value={newMinLimit}
                     onChange={(e) => setNewMinLimit(e.target.value)}
                     placeholder="3"
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500 font-mono"
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-900 placeholder-zinc-400 font-mono"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-gray-400 block">Unidad *</label>
+                  <label className="text-[11px] font-semibold text-zinc-500 block">Unidad *</label>
                   <input
                     type="text"
                     required
                     value={newUnit}
                     onChange={(e) => setNewUnit(e.target.value)}
                     placeholder="kg, l, pz"
-                    className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500"
+                    className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-900 placeholder-zinc-400"
                   />
                 </div>
               </div>
 
               {/* Costo Unitario */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-400 block">Costo de Compra de Unit ($) *</label>
+                <label className="text-xs font-semibold text-zinc-500 block">Costo de Compra de Unidad ($) *</label>
                 <input
                   type="number"
                   required
@@ -369,24 +369,24 @@ export default function Inventario({
                   value={newCostPrice}
                   onChange={(e) => setNewCostPrice(e.target.value)}
                   placeholder="Ej: 4.50"
-                  className="w-full text-xs px-3 py-2 border border-[#2A2A2A] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-[#C5A059] bg-[#1F1F1F] text-white placeholder-gray-500 font-mono"
+                  className="w-full text-xs px-3 py-2 border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-zinc-400 bg-white text-zinc-900 placeholder-zinc-400 font-mono"
                 />
               </div>
 
               {/* Botón Guardar */}
-              <div className="pt-3 border-t border-[#2A2A2A] flex justify-end gap-2 text-xs">
+              <div className="pt-3 border-t border-zinc-150 flex justify-end gap-2 text-xs">
                 <button
                   type="button"
                   onClick={() => setIsAddingNew(false)}
-                  className="px-4 py-2 bg-[#1F1F1F] text-gray-400 border border-[#2A2A2A] rounded-lg hover:bg-[#2A2A2A] font-bold cursor-pointer"
+                  className="px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg hover:bg-zinc-200 font-semibold cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#C5A059] hover:bg-[#D5B069] text-black rounded-lg font-bold uppercase tracking-wider cursor-pointer"
+                  className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-bold uppercase tracking-wider cursor-pointer"
                 >
-                  Confirmar Registro
+                  Registrar Insumo
                 </button>
               </div>
             </form>
